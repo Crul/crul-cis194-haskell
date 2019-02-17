@@ -43,7 +43,7 @@ luhnReminder = lastDigit . sumDigits . doubleEveryOther . toRevDigits
 
 -- Validate a credit card number using the above functions.
 luhn :: Integer -> Bool
-luhn i = luhnReminder i == 0
+luhn = (==0) . luhnReminder
 
 -- Exercise 6 -----------------------------------------
 
