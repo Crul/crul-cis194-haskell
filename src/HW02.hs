@@ -65,7 +65,7 @@ isConsistent mv@(Move guess _ _) code = mv == getMove code guess
 -- Exercise 5 -----------------------------------------
 
 filterCodes :: Move -> [Code] -> [Code]
-filterCodes = undefined
+filterCodes = filter . isConsistent
 
 -- Exercise 6 -----------------------------------------
 

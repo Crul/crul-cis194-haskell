@@ -50,8 +50,17 @@ ex4Tests = [ testF2 "isConsistent test" isConsistent
 
 -- Exercise 5 -----------------------------------------
 
+testFilterCodes :: (Move, [Code], [Code]) -> Bool
+testFilterCodes (mv, a, b) = filterCodes mv a == b
+
 ex5Tests :: [Test]
-ex5Tests = []
+ex5Tests = [ Test "filterCodes test" testFilterCodes
+             [ (Move [Red, Red, Blue, Green] 1 1
+               , [ [Red, Blue, Yellow, Purple], [Red, Blue, Red, Purple] ]
+               , [ [Red, Blue, Yellow, Purple] ]
+               )
+             ]
+           ]
 
 -- Exercise 6 -----------------------------------------
 
