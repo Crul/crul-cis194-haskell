@@ -60,7 +60,7 @@ getMove secret guess = Move guess exactM nonExM
 -- Exercise 4 -----------------------------------------
 
 isConsistent :: Move -> Code -> Bool
-isConsistent = undefined
+isConsistent mv@(Move guess _ _) code = mv == getMove code guess
 
 -- Exercise 5 -----------------------------------------
 
