@@ -52,4 +52,12 @@ type Peg = String
 type Move = (Peg, Peg)
 
 hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
-hanoi = undefined
+hanoi 0 _   _   _   = []
+hanoi n src trg aux = srcToAux ++ baseToTrg ++ auxToTrg
+  where
+    srcToAux  = hanoi (n-1) src aux trg
+    baseToTrg = [(src, trg)]
+    auxToTrg  = hanoi (n-1) aux trg src
+
+hanoi' :: Integer -> [Move]
+hanoi' n = hanoi n "a" "b" "c"
