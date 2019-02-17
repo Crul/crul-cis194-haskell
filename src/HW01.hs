@@ -61,3 +61,15 @@ hanoi n src trg aux = srcToAux ++ baseToTrg ++ auxToTrg
 
 hanoi' :: Integer -> [Move]
 hanoi' n = hanoi n "a" "b" "c"
+
+hanoiFour :: Integer -> Peg -> Peg -> Peg -> Peg -> [Move]
+hanoiFour 0 _   _   _ _ = []
+hanoiFour 1 src trg _ _ = [(src, trg)]
+hanoiFour n src trg a b = srcToAux ++ baseToTrg ++ auxToTrg
+  where
+    srcToAux  = hanoiFour (n-2) src a trg b
+    baseToTrg = hanoi 2 src trg b
+    auxToTrg  = hanoiFour (n-2) a trg src b
+
+hanoiFour' :: Integer -> [Move]
+hanoiFour' n = hanoiFour n "a" "b" "c" "d"

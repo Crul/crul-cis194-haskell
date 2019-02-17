@@ -78,6 +78,25 @@ ex6Tests = [ Test "hanoi test" testHanoi
              ]
            ]
 
+-- Exercise 7 -----------------------------------------
+
+testHanoiFour :: (Integer, Peg, Peg, Peg, Peg, [Move]) -> Bool
+testHanoiFour (i, a, b, c, d, mv) = hanoiFour i a b c d == mv
+
+testHanoiFourOptimal :: (Integer, Int) -> Bool
+testHanoiFourOptimal (i, mv) = length (hanoiFour i "a" "b" "c" "d") == mv
+
+ex7Tests :: [Test]
+ex7Tests = [ Test "hanoiFour test" testHanoiFour
+             [ (5, "a", "b", "c", "d",
+                [ ("a","b"),("a","d"),("a","c"),("d","c"),("b","c")  -- [3-tower] a => c
+                , ("a","d"),("a","b"),("d","b")                      -- [2-tower] a => b
+                , ("c","a"),("c","d"),("c","b"),("d","b"),("a","b")  -- [3-tower] c => b
+                ]
+               )
+             ]
+           ]
+
 -- All Tests ------------------------------------------
 
 allTests :: [Test]
@@ -87,4 +106,5 @@ allTests = concat [ ex1Tests
                   , ex4Tests
                   , ex5Tests
                   , ex6Tests
+                  , ex7Tests
                   ]
