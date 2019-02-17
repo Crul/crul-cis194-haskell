@@ -95,6 +95,8 @@ ex7Tests = [ Test "hanoiFour test" testHanoiFour
                 ]
                )
              ]
+           , Test "hanoiFourOptimal test" testHanoiFourOptimal
+             [(1, 1), (2, 3), (3, 5), (4, 9), (5, 13), (10, 49), (15, 129)]
            ]
 
 -- All Tests ------------------------------------------
