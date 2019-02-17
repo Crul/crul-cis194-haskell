@@ -33,8 +33,8 @@ doubleEveryOther = zipWith doubleIfEvenIdx [1..]
 
 -- Calculate the sum of all the digits in every Integer.
 sumDigits :: [Integer] -> Integer
-sumDigits = undefined
-
+sumDigits xs = sum allDigits
+  where allDigits = concatMap toRevDigits xs
 
 -- Exercise 5 -----------------------------------------
 
