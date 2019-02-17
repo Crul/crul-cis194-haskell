@@ -36,11 +36,16 @@ exactMatches a b = length . filter (uncurry (==)) $ zip a b
 
 -- For each peg in xs, count how many times is occurs in ys
 countColors :: Code -> [Int]
-countColors = undefined
+countColors code = map countColor colors
+  where countColor :: Peg -> Int
+        countColor peg = length $ filter (==peg) code
 
 -- Count number of matches between the actual code and the guess
 matches :: Code -> Code -> Int
-matches = undefined
+matches a b = sum $ zipWith min countA countB
+  where
+    countA = countColors a
+    countB = countColors b
 
 -- Exercise 3 -----------------------------------------
 
