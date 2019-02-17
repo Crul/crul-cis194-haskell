@@ -92,6 +92,24 @@ solve :: Code -> [Move]
 solve scrt = solveGuess scrt candidates
   where candidates = allCodes $ length scrt
 
+{-- Exercise 7 Alternative Version ---------------------
+solve :: Code -> [Move]
+solve scrt = solution
+  where
+    candidates = allCodes $ length scrt
+    solution   = solveGuess candidates []
+
+    solveGuess :: [Code] -> [Move] -> [Move]
+    solveGuess []         moves = moves
+    solveGuess (guess:gs) moves
+      | guess == scrt = mv : moves
+      | otherwise     = mv : nxtMoves
+        where
+          mv       = getMove scrt guess
+          filtered = filterCodes mv (guess:gs)
+          nxtMoves = solveGuess filtered moves
+--}
+
 -- Bonus ----------------------------------------------
 
 fiveGuess :: Code -> [Move]
