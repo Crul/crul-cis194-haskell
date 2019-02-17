@@ -51,7 +51,11 @@ matches a b = sum $ zipWith min countA countB
 
 -- Construct a Move from a guess given the actual code
 getMove :: Code -> Code -> Move
-getMove = undefined
+getMove secret guess = Move guess exactM nonExM
+  where
+    exactM = exactMatches secret guess
+    allM   = matches secret guess
+    nonExM = allM - exactM
 
 -- Exercise 4 -----------------------------------------
 
