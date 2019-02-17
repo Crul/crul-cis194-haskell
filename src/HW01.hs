@@ -38,9 +38,12 @@ sumDigits xs = sum allDigits
 
 -- Exercise 5 -----------------------------------------
 
+luhnReminder :: Integer -> Integer
+luhnReminder = lastDigit . sumDigits . doubleEveryOther . toRevDigits
+
 -- Validate a credit card number using the above functions.
 luhn :: Integer -> Bool
-luhn = undefined
+luhn i = luhnReminder i == 0
 
 -- Exercise 6 -----------------------------------------
 
