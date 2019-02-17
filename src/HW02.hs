@@ -68,9 +68,15 @@ filterCodes :: Move -> [Code] -> [Code]
 filterCodes = filter . isConsistent
 
 -- Exercise 6 -----------------------------------------
+addColor :: Code -> [Code]
+addColor code = map (:code) colors
 
 allCodes :: Int -> [Code]
-allCodes = undefined
+allCodes 1 = addColor []
+allCodes n 
+  | n > 0     = concatMap addColor nxtCodes
+  | otherwise =  []
+  where nxtCodes = allCodes $ n-1
 
 -- Exercise 7 -----------------------------------------
 

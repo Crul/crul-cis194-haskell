@@ -64,8 +64,25 @@ ex5Tests = [ Test "filterCodes test" testFilterCodes
 
 -- Exercise 6 -----------------------------------------
 
+testAllCodes :: (Int, [Code]) -> Bool
+testAllCodes (n, c) = allCodes n == c
+
 ex6Tests :: [Test]
-ex6Tests = []
+ex6Tests = [
+    Test "allCodes test" testAllCodes
+    [ (1, [ [Red], [Green], [Blue], [Yellow], [Orange], [Purple] ] )
+    , (2, [ [Red, Red   ], [Green, Red   ], [Blue, Red   ], [Yellow, Red   ], [Orange, Red   ], [Purple, Red   ]
+          , [Red, Green ], [Green, Green ], [Blue, Green ], [Yellow, Green ], [Orange, Green ], [Purple, Green ]
+          , [Red, Blue  ], [Green, Blue  ], [Blue, Blue  ], [Yellow, Blue  ], [Orange, Blue  ], [Purple, Blue  ]
+          , [Red, Yellow], [Green, Yellow], [Blue, Yellow], [Yellow, Yellow], [Orange, Yellow], [Purple, Yellow]
+          , [Red, Orange], [Green, Orange], [Blue, Orange], [Yellow, Orange], [Orange, Orange], [Purple, Orange]
+          , [Red, Purple], [Green, Purple], [Blue, Purple], [Yellow, Purple], [Orange, Purple], [Purple, Purple]
+        ]
+      )
+    , (0, [])
+    , (-1, [])
+    ]
+  ]
 
 -- Exercise 7 -----------------------------------------
 
