@@ -24,6 +24,13 @@ colors = [Red, Green, Blue, Yellow, Orange, Purple]
 -- Get the number of exact matches between the actual code and the guess
 exactMatches :: Code -> Code -> Int
 exactMatches a b = length . filter (uncurry (==)) $ zip a b
+-- https://stackoverflow.com/a/13426526
+-- exactMatches a b = length . filter (uncurry (==)) $ zip a b
+-- exactMatches a b = length . filter (uncurry (==)) . zip a $ b
+-- exactMatches a = length . filter (uncurry (==)) . zip a
+-- exactMatches a = (.) (length . filter (uncurry (==))) (zip a)
+-- exactMatches a = ((.) (length . filter (uncurry (==)))) . zip $ a
+-- exactMatches = ((.) (length . filter (uncurry (==)))) . zip
 
 -- Exercise 2 -----------------------------------------
 
