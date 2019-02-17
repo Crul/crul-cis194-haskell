@@ -80,8 +80,17 @@ allCodes n
 
 -- Exercise 7 -----------------------------------------
 
+solveGuess :: Code -> [Code] -> [Move]
+solveGuess _    []       = []
+solveGuess scrt (gss:cs) = mv : nxtMoves
+  where
+    mv       = getMove scrt gss
+    filtered = filterCodes mv cs
+    nxtMoves = solveGuess scrt filtered
+
 solve :: Code -> [Move]
-solve = undefined
+solve scrt = solveGuess scrt candidates
+  where candidates = allCodes $ length scrt
 
 -- Bonus ----------------------------------------------
 

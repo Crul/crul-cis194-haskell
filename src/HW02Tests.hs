@@ -86,8 +86,25 @@ ex6Tests = [
 
 -- Exercise 7 -----------------------------------------
 
+testSolve :: (Code, [Move]) -> Bool
+testSolve (c, ms) = solve c == ms
+
 ex7Tests :: [Test]
-ex7Tests = []
+ex7Tests = [
+    Test "solve test" testSolve
+    [ ( [ Red, Blue, Blue ]
+      , [ Move [Red,Red,Red] 1 0, Move [Green,Green,Red] 0 1
+        , Move [Blue,Red,Blue] 1 2, Move [Red,Blue,Blue] 3 0
+        ]
+      )
+    , ( [ Yellow, Orange, Purple ]
+      , [ Move [Red,Red,Red] 0 0, Move [Green,Green,Green] 0 0, Move [Blue,Blue,Blue] 0 0
+        , Move [Yellow,Yellow,Yellow] 1 0, Move [Orange,Orange,Yellow] 1 1
+        , Move [Orange,Yellow,Purple] 1 2, Move [Yellow,Orange,Purple] 3 0
+        ]
+      )
+    ]
+  ]
 
 -- Bonus ----------------------------------------------
 
