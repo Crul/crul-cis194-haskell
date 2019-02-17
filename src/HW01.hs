@@ -22,11 +22,12 @@ toRevDigits i
 
 -- Exercise 3 -----------------------------------------
 
+doubleIfEvenIdx :: Integer -> Integer -> Integer
+doubleIfEvenIdx idx i = if idx `mod` 2 == 0 then i*2 else i
+
 -- Double every second number in a list starting on the left.
 doubleEveryOther :: [Integer] -> [Integer]
-doubleEveryOther []       = []
-doubleEveryOther (x:y:xs) = x:y*2:doubleEveryOther xs
-doubleEveryOther i        = i
+doubleEveryOther = zipWith doubleIfEvenIdx [1..]
 
 -- Exercise 4 -----------------------------------------
 
