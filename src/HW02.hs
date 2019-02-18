@@ -1,12 +1,17 @@
 {-# OPTIONS_GHC -Wall #-}
+{-# LANGUAGE TemplateHaskell #-}
+
 module HW02 where
 import Data.List
+import Data.Function.Memoize
 
 -- Mastermind -----------------------------------------
 
 -- A peg can be one of six colors
 data Peg = Red | Green | Blue | Yellow | Orange | Purple
          deriving (Show, Eq, Ord)
+
+deriveMemoizable ''Peg
 
 -- A code is defined to simply be a list of Pegs
 type Code = [Peg]
@@ -36,10 +41,13 @@ exactMatches a b = length . filter (uncurry (==)) $ zip a b
 -- Exercise 2 -----------------------------------------
 
 -- For each peg in xs, count how many times is occurs in ys
-countColors :: Code -> [Int]
-countColors code = map countColor colors
+countColors' :: Code -> [Int]
+countColors' code = map countColor colors
   where countColor :: Peg -> Int
         countColor peg = length $ filter (==peg) code
+
+countColors :: Code -> [Int]
+countColors = memoize countColors'
 
 -- Count number of matches between the actual code and the guess
 matches :: Code -> Code -> Int
