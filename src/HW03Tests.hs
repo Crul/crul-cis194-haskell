@@ -169,7 +169,7 @@ testExample prog (vi, vo) (i, o) =
 progTests :: [Test]
 progTests = [ Test "examples: factorial" (testExample factorial ("In", "Out"))
               (zip [0..] [1, 1, 2, 6, 24, 120, 720, 5040])
-            , Test "examples: squareRoot" (testExample squareRoot ("A", "B"))
+            , Test "examples: squareRoot" (testExample squareRoot ("In", "Out"))
               [(1, 1), (4, 2), (6, 2), (16, 4), (99, 9), (100, 10)]
             , Test "exmaples: fibonacci" (testExample fibonacci ("In", "Out"))
               (zip [0..] [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89])

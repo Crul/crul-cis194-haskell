@@ -147,10 +147,10 @@ factorial = For (Assign "Out" (Val 1))
    B := B - 1
 -}
 squareRoot :: Statement
-squareRoot = slist [ Assign "B" (Val 0)
-                   , While (Op (Var "A") Ge (Op (Var "B") Times (Var "B")))
-                       (Incr "B")
-                   , Assign "B" (Op (Var "B") Minus (Val 1))
+squareRoot = slist [ Assign "Out" (Val 0)
+                   , While (Op (Var "In") Ge (Op (Var "Out") Times (Var "Out")))
+                       (Incr "Out")
+                   , Assign "Out" (Op (Var "Out") Minus (Val 1))
                    ]
 
 {- Calculate the nth Fibonacci number
@@ -191,3 +191,9 @@ fibonacci = slist [ Assign "F0" (Val 1)
                            )
                        )
                   ]
+
+runIO :: Statement -> Int -> Int
+runIO st i = evalE result output
+  where initSt = extend empty "In" i
+        result = run initSt st
+        output = Var "Out"
