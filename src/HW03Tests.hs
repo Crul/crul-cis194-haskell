@@ -25,8 +25,33 @@ ex1Tests = [ Test "state: empty" testState
 
 -- Exercise 2 -----------------------------------------
 
+testEvalE :: ([(String, Int)], Expression, Int) -> Bool
+testEvalE (inputs, expr, result) = evalE (runStateUpdates inputs) expr == result
+
 ex2Tests :: [Test]
-ex2Tests = []
+ex2Tests = [ Test "evalE: variables" testEvalE
+             [ ([], Var "X", 0)
+             , ([("X", 1)], Var "X", 1)
+             ]
+           , Test "evalE: values" testEvalE
+             [ ([], Val 0, 0)
+             , ([], Val 1, 1)
+             ]
+           , Test "evalE: arithmetic" testEvalE
+             [ ([], Op (Val 2) Plus (Val 3), 5)
+             , ([], Op (Val 2) Minus (Val 3), (-1))
+             , ([], Op (Val 2) Times (Val 3), 6)
+             , ([], Op (Val 20) Divide (Val 3), 6)
+             ]
+           , Test "evalE: comparison" testEvalE
+             [ ([], Op (Val 2) Gt (Val 3), 0)
+             , ([], Op (Val 3) Gt (Val 2), 1)
+             , ([], Op (Val 2) Lt (Val 3), 1)
+             , ([], Op (Val 3) Lt (Val 2), 0)
+             , ([], Op (Val 3) Eql (Val 2), 0)
+             , ([], Op (Val 2) Eql (Val 2), 1)
+             ]
+           ]
 
 -- Exercise 3 -----------------------------------------
 

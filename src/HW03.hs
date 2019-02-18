@@ -41,8 +41,29 @@ empty _ = 0
 
 -- Exercise 2 -----------------------------------------
 
+toInt :: Bool -> Int
+toInt b = if b then 1 else 0
+
 evalE :: State -> Expression -> Int
-evalE = undefined
+evalE st (Var str)    = st str
+evalE st (Val i)      = i
+evalE st (Op a bop b) = op a' b'
+  where
+    a' = evalE st a
+    b' = evalE st b
+    op = case bop
+         of Plus   -> (+)
+            Minus  -> (-)
+            Times  -> (*)
+            Divide -> div
+            Gt     -> boolToIntOp (>)
+            Ge     -> boolToIntOp (>=)
+            Lt     -> boolToIntOp (<)
+            Le     -> boolToIntOp (<=)
+            Eql    -> boolToIntOp (==)
+
+    boolToIntOp :: (Int -> Int -> Bool) -> Int -> Int -> Int
+    boolToIntOp bFn a b = toInt $ bFn a b
 
 -- Exercise 3 -----------------------------------------
 
