@@ -56,6 +56,13 @@ evalE st (Op a bop b) = op a' b'
             Minus  -> (-)
             Times  -> (*)
             Divide -> div
+            Gt     -> (toInt .) . (>)
+            Ge     -> (toInt .) . (>=)
+            Lt     -> (toInt .) . (<)
+            Le     -> (toInt .) . (<=)
+            Eql    -> (toInt .) . (==)
+
+{-- Non-point-free version
             Gt     -> boolToIntOp (>)
             Ge     -> boolToIntOp (>=)
             Lt     -> boolToIntOp (<)
@@ -64,6 +71,7 @@ evalE st (Op a bop b) = op a' b'
 
     boolToIntOp :: (Int -> Int -> Bool) -> Int -> Int -> Int
     boolToIntOp bFn a b = toInt $ bFn a b
+--}
 
 -- Exercise 3 -----------------------------------------
 
