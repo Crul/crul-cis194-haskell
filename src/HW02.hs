@@ -1,5 +1,6 @@
 {-# OPTIONS_GHC -Wall #-}
 module HW02 where
+import Data.List
 
 -- Mastermind -----------------------------------------
 
@@ -71,12 +72,16 @@ filterCodes = filter . isConsistent
 addColor :: Code -> [Code]
 addColor code = map (:code) colors
 
-allCodes :: Int -> [Code]
-allCodes n
-  | n > 0     = concatMap addColor nxtCodes
+addColor' :: Code -> [Code]
+addColor' code = map (\color -> code ++ [color]) colors
+
+allCodes :: (Code -> [Code]) -> Int -> [Code]
+allCodes _          0 = [[]]
+allCodes addColorFn n
+  | n > 0     = concatMap addColorFn nxtCodes
   | otherwise = [[]]
   where
-    nxtCodes  = allCodes addColor $ n-1
+    nxtCodes  = allCodes addColorFn $ n-1
 
 -- Exercise 7 -----------------------------------------
 
@@ -90,13 +95,13 @@ solveGuess scrt (gss:cs) = mv : nxtMoves
 
 solve :: Code -> [Move]
 solve scrt = solveGuess scrt candidates
-  where candidates = allCodes $ length scrt
+  where candidates = allCodes addColor $ length scrt
 
 {-- Exercise 7 Alternative Version ---------------------
 solve :: Code -> [Move]
 solve scrt = solution
   where
-    candidates = allCodes $ length scrt
+    candidates = allCodes addColor $ length scrt
     solution   = solveGuess candidates []
 
     solveGuess :: [Code] -> [Move] -> [Move]
@@ -113,4 +118,50 @@ solve scrt = solution
 -- Bonus ----------------------------------------------
 
 fiveGuess :: Code -> [Move]
-fiveGuess = undefined
+fiveGuess scrt = fiveGuessSolver scrt allC allC fstCode
+  where
+    brdSize  = length scrt
+    fstCode  = firstCode brdSize
+    allC     = allCodes addColor' brdSize
+
+firstCode :: Int -> Code
+firstCode brdSize = [ if x <= brdSize `div` 2
+                      then colors!!0
+                      else colors!!1
+                    | x <- [1..brdSize] ]
+
+fiveGuessSolver :: Code -> [Code] -> [Code] -> Code -> [Move]
+-- fiveGuessSolver _    []     _      _    = []
+-- fiveGuessSolver []   _      _      _    = []
+fiveGuessSolver scrt unused valids code = mv : moves
+  where
+    mv = getMove scrt code
+    moves
+      | code == scrt = []
+      | otherwise    = fiveGuessSolver scrt unused' valids' code'
+        where
+          unused' = delete code unused
+          valids' = filterCodes mv $ delete code valids
+          code'   = minimax unused' valids'
+
+minimax :: [Code] -> [Code] -> Code
+-- minimax _      []     = []
+-- minimax []     (v:_)  = v
+minimax unused valids = head minSorted
+  where
+    vals         = map (scoreCode valids) unused
+    scores       = zip unused vals
+    minVal       = minimum vals
+    minValScores = filter ((== minVal) . snd) scores
+    minValCodes  = map fst minValScores
+    validMinVCs  = intersect minValCodes valids
+    minSorted    = concat [validMinVCs, minValCodes]
+
+scoreCode :: [Code] -> Code -> Int
+scoreCode valids code = maximum scores
+  where
+    getMove' c = getMove c code
+    moves      = map getMove' valids
+    uniqueMvs  = nub moves
+    scoreMove  = \mv -> length $ filter (== mv) moves
+    scores     = map scoreMove uniqueMvs
