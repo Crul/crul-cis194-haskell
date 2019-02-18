@@ -33,10 +33,11 @@ type State = String -> Int
 -- Exercise 1 -----------------------------------------
 
 extend :: State -> String -> Int -> State
-extend = undefined
+extend st a i = st'
+  where st' b = if a == b then i else st b
 
 empty :: State
-empty = undefined
+empty _ = 0
 
 -- Exercise 2 -----------------------------------------
 
