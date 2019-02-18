@@ -65,7 +65,7 @@ ex5Tests = [ Test "filterCodes test" testFilterCodes
 -- Exercise 6 -----------------------------------------
 
 testAllCodes :: (Int, [Code]) -> Bool
-testAllCodes (n, c) = allCodes n == c
+testAllCodes (n, c) = allCodes addColor n == c
 
 ex6Tests :: [Test]
 ex6Tests = [
@@ -79,8 +79,8 @@ ex6Tests = [
           , [Red, Purple], [Green, Purple], [Blue, Purple], [Yellow, Purple], [Orange, Purple], [Purple, Purple]
         ]
       )
-    , (0, [])
-    , (-1, [])
+    , (0, [[]])
+    , (-1, [[]])
     ]
   ]
 
@@ -108,8 +108,37 @@ ex7Tests = [
 
 -- Bonus ----------------------------------------------
 
+testFiveGuessCount :: Code -> Bool
+testFiveGuessCount c = length (fiveGuess c) <= 5
+
+codeByIdx :: Int -> Code
+codeByIdx = (!!) $ allCodes addColor' 4
+
+idxToTest :: [Int]
+idxToTest = [1, 111, 195, 216, 314, 320, 500, 666, 722, 814, 999, 1000, 1020, 1030, 1250, 1295]
+-- idxToTest = [0..1295]
+
+testFiveGuess :: (Code, [Move]) -> Bool
+testFiveGuess (c, ms) = fiveGuess c == ms
+
 bonusTests :: [Test]
-bonusTests = []
+bonusTests = [
+    Test "fiveGuess test optimality" testFiveGuessCount $ map codeByIdx idxToTest
+  , Test "fiveGuess test solution" testFiveGuess
+    [ ( [ Green, Blue, Purple, Blue ]
+      , [ Move [Red,Red,Green,Green] 0 1, Move [Green,Blue,Yellow,Yellow] 2 0
+        , Move [Red,Orange,Yellow,Orange] 0 0, Move [Red,Red,Blue,Purple] 0 2
+        , Move [Green,Blue,Purple,Blue] 4 0
+        ]
+      )
+    , ( [ Orange, Orange, Yellow, Orange ]
+      , [ Move [Red,Red,Green,Green] 0 0, Move [Blue,Blue,Yellow,Orange] 2 0
+        , Move [Blue,Purple,Blue,Purple] 0 0, Move [Red,Yellow,Yellow,Yellow] 1 0
+        , Move [Orange,Orange,Yellow,Orange] 4 0
+        ]
+      )
+    ]
+  ]
 
 -- All Tests ------------------------------------------
 

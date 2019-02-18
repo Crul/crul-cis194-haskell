@@ -72,11 +72,11 @@ addColor :: Code -> [Code]
 addColor code = map (:code) colors
 
 allCodes :: Int -> [Code]
-allCodes 1 = addColor []
-allCodes n 
+allCodes n
   | n > 0     = concatMap addColor nxtCodes
-  | otherwise =  []
-  where nxtCodes = allCodes $ n-1
+  | otherwise = [[]]
+  where
+    nxtCodes  = allCodes addColor $ n-1
 
 -- Exercise 7 -----------------------------------------
 
