@@ -21,9 +21,19 @@ ex2Tests = [ Test "==" testEqual
 
 
 -- Exercise 3 -----------------------------------------
+testShow :: (Num a, Eq a, Show a) => (Poly a, String) -> Bool
+testShow (p, s) = show p == s
 
 ex3Tests :: [Test]
-ex3Tests = []
+ex3Tests = [ Test "show" testShow
+             [ (P [1, 0, 0, 2], "2x^3 + 1"),
+               (P [0, -1, 2], "2x^2 + -x"),
+               (P [0], "0"),
+               (P [-1], "-1"),
+               (P [0, 1], "x"),
+               (P [0, -1], "-x"),
+               (P [-3, -2], "-2x + -3")]
+           ]
 
 
 -- Exercise 4 -----------------------------------------

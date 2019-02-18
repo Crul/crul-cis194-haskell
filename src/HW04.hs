@@ -1,6 +1,8 @@
 {-# OPTIONS_GHC -Wall #-}
 module HW04 where
 
+import Data.List
+
 newtype Poly a = P [a]
 
 -- Exercise 1 -----------------------------------------
@@ -17,7 +19,28 @@ instance (Num a, Eq a) => Eq (Poly a) where
 -- Exercise 3 -----------------------------------------
 
 instance (Num a, Eq a, Show a) => Show (Poly a) where
-    show (P a) = show a  -- TODO WIP
+    show (P p) = showPoly p
+
+showPoly :: (Num a, Eq a, Show a) => [a] -> String
+showPoly p = zeroIfEmpty poly
+  where
+    poly  = intercalate " + " $ reverse terms
+    terms = filter (not . null) $ map showPolyTerm $ zip [0..] p
+
+showPolyTerm :: (Num a, Eq a, Show a) => (Int, a) -> String
+showPolyTerm (_   , 0)      = ""
+showPolyTerm (0   , factor) = show factor
+showPolyTerm (1   , factor) = showFactorForX factor ++ "x"
+showPolyTerm (ordr, factor) = showFactorForX factor ++ "x^" ++ (show ordr)
+
+showFactorForX :: (Num a, Eq a, Show a) => a -> String
+showFactorForX 1    = ""
+showFactorForX (-1) = "-"
+showFactorForX f    = show f
+
+zeroIfEmpty :: String -> String
+zeroIfEmpty "" = "0"
+zeroIfEmpty s  = s
 
 -- Exercise 4 -----------------------------------------
 
