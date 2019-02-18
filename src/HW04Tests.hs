@@ -7,8 +7,17 @@ import Testing
 
 -- Exercise 2 -----------------------------------------
 
+testEqual :: (Num a, Eq a) => (Poly a, Poly a) -> Bool
+testEqual (a, b) = a == b
+
 ex2Tests :: [Test]
-ex2Tests = []
+ex2Tests = [ Test "==" testEqual
+             [ (P[1, 2, 3], P[1, 2, 3]),
+               (P[1, 2, 0, 0], P[1, 2])]
+           , Test "/=" (not . testEqual)
+             [ (P[1, 2], P[1, 2, 3])
+             , (P[1, 0, 2], P[1, 2]) ]
+           ]
 
 
 -- Exercise 3 -----------------------------------------
