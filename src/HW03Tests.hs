@@ -78,13 +78,102 @@ ex3Tests = [ Test "desugar: one to one" testDesugar
 
 -- Exercise 4 -----------------------------------------
 
+testEvalSimple :: ([(String, Int)], Statement, (String, Int)) -> Bool
+testEvalSimple (inputs, stmt, (oVar, oVal)) =
+  evalSimple (runStateUpdates inputs) (desugar stmt) oVar == oVal
+
+testRun :: ([(String, Int)], Statement, (String, Int)) -> Bool
+testRun (inputs, stmt, (oVar, oVal)) =
+  run (runStateUpdates inputs) stmt oVar == oVal
+
 ex4Tests :: [Test]
-ex4Tests = []
+ex4Tests = [ Test "evalSimple: assign" testEvalSimple
+             [ ([], Assign "X" (Val 1), ("X", 1))
+             , ([("X", 2)], (Assign "X" (Op (Var "X") Times (Val 2))), ("X", 4))
+             ]
+           , Test "evalSimple: incr" testEvalSimple
+             [ ([], Incr "X", ("X", 1))
+             , ([("X", 2)], Incr "X", ("X", 3))
+             ]
+           , Test "evalSimple: if" testEvalSimple
+             [ ([("X", 1)], If (Var "X") (Assign "Y" (Var "X")) Skip
+               , ("Y", 1))
+             , ([("X", 0), ("Y", 2)], If (Var "X") (Assign "Y" (Var "X")) Skip
+               , ("Y", 2))
+             ]
+           , Test "evalSimple: while" testEvalSimple
+             [ ([], While (Op (Var "X") Lt (Val 10))
+                          (Assign "X" (Op (Var "X") Plus (Val 1))),
+                ("X", 10))
+             ]
+           , Test "evalSimple: for" testEvalSimple
+             [ ([], For (Assign "X" (Val 1))
+                        (Op (Var "X") Lt (Val 10))
+                        (Incr "X")
+                        (Assign "Y" (Var "X"))
+               , ("Y", 9))
+             ]
+           , Test "evalSimple: sequence" testEvalSimple
+             [ ([], Sequence (Assign "X" (Val 1)) (Assign "Y" (Var "X"))
+               , ("Y", 1))
+             , ([], Sequence (Assign "X" (Val 1)) (Assign "X" (Op (Var "X") Plus (Val 1)))
+               , ("X", 2))
+             ]
+           , Test "evalSimple: skip" testEvalSimple
+             [ ([], Skip, ("X", 0))
+             ]
+
+          , Test "run: assign" testRun
+             [ ([], Assign "X" (Val 1), ("X", 1))
+             , ([("X", 2)], (Assign "X" (Op (Var "X") Times (Val 2))), ("X", 4))
+             ]
+           , Test "run: incr" testRun
+             [ ([], Incr "X", ("X", 1))
+             , ([("X", 2)], Incr "X", ("X", 3))
+             ]
+           , Test "run: if" testRun
+             [ ([("X", 1)], If (Var "X") (Assign "Y" (Var "X")) Skip
+               , ("Y", 1))
+             , ([("X", 0), ("Y", 2)], If (Var "X") (Assign "Y" (Var "X")) Skip
+               , ("Y", 2))
+             ]
+           , Test "run: while" testRun
+             [ ([], While (Op (Var "X") Lt (Val 10))
+                          (Assign "X" (Op (Var "X") Plus (Val 1))),
+                ("X", 10))
+             ]
+           , Test "run: for" testRun
+             [ ([], For (Assign "X" (Val 1))
+                        (Op (Var "X") Lt (Val 10))
+                        (Incr "X")
+                        (Assign "Y" (Var "X"))
+               , ("Y", 9))
+             ]
+           , Test "run: sequence" testRun
+             [ ([], Sequence (Assign "X" (Val 1)) (Assign "Y" (Var "X"))
+               , ("Y", 1))
+             , ([], Sequence (Assign "X" (Val 1)) (Assign "X" (Op (Var "X") Plus (Val 1)))
+               , ("X", 2))
+             ]
+           , Test "run: skip" testRun
+             [ ([], Skip, ("X", 0))
+             ]
+           ]
 
 -- Example Programs -----------------------------------------
 
+testExample :: Statement -> (String, String) -> (Int, Int) -> Bool
+testExample prog (vi, vo) (i, o) =
+  evalSimple (extend empty vi i) (desugar prog) vo == o
+
 progTests :: [Test]
-progTests = []
+progTests = [ Test "examples: factorial" (testExample factorial ("In", "Out"))
+              (zip [0..] [1, 1, 2, 6, 24, 120, 720, 5040])
+            , Test "examples: squareRoot" (testExample squareRoot ("A", "B"))
+              [(1, 1), (4, 2), (6, 2), (16, 4), (99, 9), (100, 10)]
+            , Test "exmaples: fibonacci" (testExample fibonacci ("In", "Out"))
+              (zip [0..] [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89])
+            ]
 
 -- All Tests ------------------------------------------
 

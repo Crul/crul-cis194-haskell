@@ -100,11 +100,24 @@ desugar (For ini cond inc body) = dFor
 
 -- Exercise 4 -----------------------------------------
 
+toBool :: Int -> Bool
+toBool = (0 /=)
+
+exprIsTrue :: State -> Expression -> Bool
+exprIsTrue state ex = toBool $ evalE state ex
+
 evalSimple :: State -> DietStatement -> State
-evalSimple = undefined
+evalSimple state DSkip               = state
+evalSimple state (DAssign st ex)     = extend state st (evalE state ex)
+evalSimple state (DIf ex aSt bSt)    = evalSimple state (if exprIsTrue state ex then aSt else bSt)
+-- evalSimple state (DSequence aSt bSt) = evalSimple (evalSimple state aSt) bSt
+evalSimple state (DSequence aSt bSt) = foldl evalSimple state [aSt, bSt]
+evalSimple state w@(DWhile ex st)    = if exprIsTrue state ex
+                                       then evalSimple state (DSequence st (DWhile ex st))
+                                       else state
 
 run :: State -> Statement -> State
-run = undefined
+run state stmt = evalSimple state (desugar stmt)
 
 -- Programs -------------------------------------------
 
