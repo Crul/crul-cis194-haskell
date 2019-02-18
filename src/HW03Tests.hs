@@ -55,8 +55,26 @@ ex2Tests = [ Test "evalE: variables" testEvalE
 
 -- Exercise 3 -----------------------------------------
 
+testDesugar :: (Statement, DietStatement) -> Bool
+testDesugar (stmt, dstmt) = desugar stmt == dstmt
+
 ex3Tests :: [Test]
-ex3Tests = []
+ex3Tests = [ Test "desugar: one to one" testDesugar
+             [ (Assign "X" (Var "X"), DAssign "X" (Var "X"))
+             , (If (Var "X") Skip Skip, DIf (Var "X") DSkip DSkip)
+             , (While (Var "X") Skip, DWhile (Var "X") DSkip)
+             , ( Sequence (Assign "X" (Val 1)) Skip
+               , DSequence (DAssign "X" (Val 1)) DSkip)
+             , (Skip, DSkip)
+             ]
+           , Test "desugar: sugar" testDesugar
+             [ (Incr "X", DAssign "X" (Op (Var "X") Plus (Val 1)))
+             , ( For Skip (Var "X") Skip (Assign "X" (Val 1))
+               , DSequence DSkip (DWhile (Var "X")
+                                  (DSequence (DAssign "X" (Val 1)) DSkip))
+               )
+             ]
+           ]
 
 -- Exercise 4 -----------------------------------------
 

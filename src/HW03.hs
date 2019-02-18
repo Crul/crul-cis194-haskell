@@ -83,8 +83,20 @@ data DietStatement = DAssign String Expression
                      deriving (Show, Eq)
 
 desugar :: Statement -> DietStatement
-desugar = undefined
-
+desugar Skip = DSkip
+desugar (Assign st ex)          = DAssign st ex
+desugar (If ex aSt bSt)         = DIf ex (desugar aSt) (desugar bSt)
+desugar (While ex st)           = DWhile ex (desugar st)
+desugar (Sequence aSt bSt)      = DSequence (desugar aSt) (desugar bSt)
+desugar (Incr st)               = DAssign st (Op (Var st) Plus (Val 1))
+desugar (For ini cond inc body) = dFor
+  where
+    ini'    = desugar ini
+    body'   = desugar body
+    inc'    = desugar inc
+    whlBody = DSequence body' inc'
+    dWhile  = DWhile cond whlBody
+    dFor    = DSequence ini' dWhile
 
 -- Exercise 4 -----------------------------------------
 
