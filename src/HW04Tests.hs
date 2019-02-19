@@ -37,9 +37,15 @@ ex3Tests = [ Test "show" testShow
 
 
 -- Exercise 4 -----------------------------------------
+testPlus :: (Num a, Eq a) => (Poly a, Poly a, Poly a) -> Bool
+testPlus (pa, pb, pc) = pa + pb == pc
 
 ex4Tests :: [Test]
-ex4Tests = []
+ex4Tests = [ Test "plus" testPlus
+             [ (P [5, 0, 1], P [1, 1, 2], P [6, 1, 3]),
+               (P [1, 0, 1], P [1, 1], P [2, 1, 1]),
+               (P [1, 1], P [2, 0, 3], P [3, 1, 3])]
+           ]
 
 
 -- Exercise 5 -----------------------------------------
