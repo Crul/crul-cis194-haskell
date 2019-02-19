@@ -47,13 +47,16 @@ zeroIfEmpty s  = s
 expandPoly :: Num a => [a] -> Int -> [a]
 expandPoly p l = p ++ (take l $ repeat 0)
 
-plus :: Num a => Poly a -> Poly a -> Poly a
-plus (P a) (P b) = P result
+plus' :: Num a => [a] -> [a] -> [a]
+plus' a b = result
   where
     lengthDff = length b - length a
     a'        = expandPoly a lengthDff
     b'        = expandPoly b (-lengthDff)
     result    = map (uncurry (+)) $ zip a' b'
+
+plus :: Num a => Poly a -> Poly a -> Poly a
+plus (P a) (P b) = P $ plus' a b
 
 -- Exercise 5 -----------------------------------------
 
