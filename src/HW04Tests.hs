@@ -67,6 +67,9 @@ testNegate (pa, pb) = negate pa == pb
 testFromInteger :: (Num a, Eq a) => (Integer, Poly a) -> Bool
 testFromInteger (i, p) = p == fromInteger i
 
+testCasting :: (Num a, Eq a) => (Poly a, [a]) -> Bool
+testCasting (P p, a) = p == a
+
 ex6Tests :: [Test]
 ex6Tests = [ Test "negate" testNegate
              [ (P [2, 4, 4, 2], P [-2, -4, -4, -2]),
@@ -74,6 +77,13 @@ ex6Tests = [ Test "negate" testNegate
                (P [0], P [0])]
            , Test "fromInteger" testFromInteger
              [ (3, P [3]), (0, P [0]), (-1, P [-1]) ]
+           , Test "casting" testCasting
+             [ (x^2 + 2*x + 1, [1, 2, 1])
+             , (10*x^4 + 13, [13, 0, 0, 0, 10])
+             , (x^2 + (-2)*x + (-1), [-1, -2, 1])
+             , (7*x^2, [0, 0, 7])
+             , (0, [0])
+             ]
            ]
 
 
