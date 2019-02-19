@@ -88,9 +88,15 @@ ex6Tests = [ Test "negate" testNegate
 
 
 -- Exercise 7 -----------------------------------------
+testApplyP :: (Num a, Eq a) => (Poly a, a, a) -> Bool
+testApplyP (p, a, b) = applyP p a == b
 
 ex7Tests :: [Test]
-ex7Tests = []
+ex7Tests = [ Test "applyP" testApplyP
+             [ (x^2 + 2*x + 1, 1, 4)
+             , (x^2 + 2*x + 1, 2, 9)
+             , (x^2 + (-2)*x + 5, 2, 5)]
+           ]
 
 
 -- Exercise 9 -----------------------------------------

@@ -98,8 +98,11 @@ instance Num a => Num (Poly a) where
 
 -- Exercise 7 -----------------------------------------
 
+applyPTerm :: Num a => a -> (Integer, a) -> a -> a
+applyPTerm xVal (idx, fctr) acc = acc + (fctr * xVal ^ idx)
+
 applyP :: Num a => Poly a -> a -> a
-applyP = undefined
+applyP (P p) xVal = foldr (applyPTerm xVal) 0 (withIndices p)
 
 -- Exercise 8 -----------------------------------------
 
