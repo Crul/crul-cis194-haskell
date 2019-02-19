@@ -6,15 +6,26 @@ import Data.ByteString.Lazy (ByteString)
 import Data.Map.Strict (Map)
 import System.Environment (getArgs)
 
+import qualified Data.Bits as DB
 import qualified Data.ByteString.Lazy as BS
-import qualified Data.Map.Strict as Map
+-- import qualified Data.Map.Strict as Map
 
 import Parser
 
 -- Exercise 1 -----------------------------------------
+-- getSecret "clues/dog-original.jpg" "clues/dog.jpg"
 
 getSecret :: FilePath -> FilePath -> IO ByteString
-getSecret = undefined
+getSecret base trgt = do
+  fBase <- BS.readFile base
+  fTrgt <- BS.readFile trgt
+  return $ getSecret' fBase fTrgt
+
+getSecret' :: ByteString -> ByteString -> ByteString
+getSecret' base trgt = toBSt xored
+  where xored = BS.zipWith DB.xor base trgt
+        toBSt = BS.pack . filter (/=0)
+
 
 -- Exercise 2 -----------------------------------------
 
