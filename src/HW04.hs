@@ -52,7 +52,7 @@ expandPoly rghtOrLft p l = left ++ right
   where zeros = (take l $ repeat 0)
         left  = if rghtOrLft then p else zeros
         right = if rghtOrLft then zeros else p
-  
+
 
 expandPolyRight :: Num a => [a] -> Int -> [a]
 expandPolyRight = expandPoly True
