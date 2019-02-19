@@ -60,6 +60,23 @@ ex5Tests = [ Test "times" testTimes
            ]
 
 
+-- Exercise 6 -----------------------------------------
+testNegate :: (Num a, Eq a) => (Poly a, Poly a) -> Bool
+testNegate (pa, pb) = negate pa == pb
+
+testFromInteger :: (Num a, Eq a) => (Integer, Poly a) -> Bool
+testFromInteger (i, p) = p == fromInteger i
+
+ex6Tests :: [Test]
+ex6Tests = [ Test "negate" testNegate
+             [ (P [2, 4, 4, 2], P [-2, -4, -4, -2]),
+               (P [1, 0, 1], P [-1, 0, -1]),
+               (P [0], P [0])]
+           , Test "fromInteger" testFromInteger
+             [ (3, P [3]), (0, P [0]), (-1, P [-1]) ]
+           ]
+
+
 -- Exercise 7 -----------------------------------------
 
 ex7Tests :: [Test]
@@ -79,6 +96,7 @@ allTests = concat [ ex2Tests,
                     ex3Tests,
                     ex4Tests,
                     ex5Tests,
+                    ex6Tests,
                     ex7Tests,
                     ex9Tests
                   ]

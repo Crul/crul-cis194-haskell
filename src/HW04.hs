@@ -80,8 +80,8 @@ times (P a) (P b) = P $ times' a b
 instance Num a => Num (Poly a) where
     (+) = plus
     (*) = times
-    negate      = undefined
-    fromInteger = undefined
+    negate        = (* P [-1])
+    fromInteger n = P [fromInteger n]
     -- No meaningful definitions exist
     abs    = undefined
     signum = undefined
