@@ -18,7 +18,7 @@ instance (Num a, Eq a) => Eq (Poly a) where
 
 -- Exercise 3 -----------------------------------------
 
-withIndices :: Num a => [a] -> [(Int, a)]
+withIndices :: Num a => [a] -> [(Integer, a)]
 withIndices p = zip [0..] p
 
 instance (Num a, Eq a, Show a) => Show (Poly a) where
@@ -30,7 +30,7 @@ showPoly p = zeroIfEmpty poly
     poly  = intercalate " + " $ reverse terms
     terms = filter (not . null) $ map showPolyTerm $ withIndices p
 
-showPolyTerm :: (Num a, Eq a, Show a) => (Int, a) -> String
+showPolyTerm :: (Num a, Eq a, Show a) => (Integer, a) -> String
 showPolyTerm (_   , 0)      = ""
 showPolyTerm (0   , factor) = show factor
 showPolyTerm (1   , factor) = showFactorForX factor ++ "x"
