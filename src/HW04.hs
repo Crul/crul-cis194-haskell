@@ -109,7 +109,9 @@ applyP (P p) xVal = foldr (applyPTerm xVal) 0 (withIndices p)
 class Num a => Differentiable a where
     deriv  :: a -> a
     nderiv :: Int -> a -> a
-    nderiv = undefined
+    nderiv n a
+      | n <= 0    = a
+      | otherwise = nderiv (n-1) (deriv a)
 
 -- Exercise 9 -----------------------------------------
 
