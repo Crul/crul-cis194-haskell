@@ -47,15 +47,22 @@ zeroIfEmpty s  = s
 
 -- Exercise 4 -----------------------------------------
 
-expandPoly :: Num a => [a] -> Int -> [a]
-expandPoly p l = p ++ (take l $ repeat 0)
+expandPoly :: Num a => Bool -> [a] -> Int -> [a]
+expandPoly rghtOrLft p l = left ++ right
+  where zeros = (take l $ repeat 0)
+        left  = if rghtOrLft then p else zeros
+        right = if rghtOrLft then zeros else p
+  
+
+expandPolyRight :: Num a => [a] -> Int -> [a]
+expandPolyRight = expandPoly True
 
 plus' :: Num a => [a] -> [a] -> [a]
 plus' a b = result
   where
     lengthDff = length b - length a
-    a'        = expandPoly a lengthDff
-    b'        = expandPoly b (-lengthDff)
+    a'        = expandPolyRight a lengthDff
+    b'        = expandPolyRight b (-lengthDff)
     result    = map (uncurry (+)) $ zip a' b'
 
 plus :: Num a => Poly a -> Poly a -> Poly a
@@ -63,8 +70,11 @@ plus (P a) (P b) = P $ plus' a b
 
 -- Exercise 5 -----------------------------------------
 
-timesTerm :: Num a => [a] -> (Int, a) -> [a]
-timesTerm p (idx, fctr) = (take idx $ repeat 0) ++ map (*fctr) p
+expandPolyLeft :: Num a => [a] -> Int -> [a]
+expandPolyLeft = expandPoly False
+
+timesTerm :: Num a => [a] -> (Integer, a) -> [a]
+timesTerm p (idx, fctr) = (take (fromInteger idx) $ repeat 0) ++ map (*fctr) p
 
 times' :: Num a => [a] -> [a] -> [a]
 times' a b = result
