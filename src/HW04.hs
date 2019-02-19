@@ -116,5 +116,7 @@ class Num a => Differentiable a where
 -- Exercise 9 -----------------------------------------
 
 instance Num a => Differentiable (Poly a) where
-    deriv = undefined
+    deriv (P [])     = P []
+    deriv (P (_:ps)) = P dTerms
+      where dTerms = map (\(e,t) -> t * fromInteger e) (zip [1..] ps)
 

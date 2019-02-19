@@ -100,9 +100,15 @@ ex7Tests = [ Test "applyP" testApplyP
 
 
 -- Exercise 9 -----------------------------------------
+testNDeriv :: (Num a, Eq a) => (Poly a, Int, Poly a) -> Bool
+testNDeriv (p1, n, p2) = nderiv n p1 == p2
 
 ex9Tests :: [Test]
-ex9Tests = []
+ex9Tests = [ Test "nderiv" testNDeriv
+             [ (x^2 + 3*x + 5, 1, 2*x + 3),
+               (x^2 + 3*x + 5, 2, 2),
+               (3*x^3 + x^2 + 2*x + 1, 3, 18)]
+           ]
 
 
 -- All Tests ------------------------------------------
