@@ -28,9 +28,23 @@ getSecret' base trgt = toBSt xored
 
 
 -- Exercise 2 -----------------------------------------
+{--
+:{
+do
+  key <- getSecret "clues/dog-original.jpg" "clues/dog.jpg"
+  let file = "clues/victims.json"
+  Prelude.putStrLn "decrypting..."
+  decryptWithKey key file
+  Prelude.putStrLn $ file ++ " decrypted!"
+:}
+--}
 
 decryptWithKey :: ByteString -> FilePath -> IO ()
-decryptWithKey = undefined
+decryptWithKey pssw fPth = do
+  encF <- BS.readFile $ fPth ++ ".enc"
+  let decoded = getSecret' encF (BS.cycle pssw)
+  BS.writeFile fPth decoded
+
 
 -- Exercise 3 -----------------------------------------
 
