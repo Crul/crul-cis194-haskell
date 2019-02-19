@@ -49,9 +49,15 @@ ex4Tests = [ Test "plus" testPlus
 
 
 -- Exercise 5 -----------------------------------------
+testTimes :: (Num a, Eq a) => (Poly a, Poly a, Poly a) -> Bool
+testTimes (pa, pb, pc) = pa * pb == pc
 
 ex5Tests :: [Test]
-ex5Tests = []
+ex5Tests = [ Test "times" testTimes
+             [ (P [1, 1, 1], P [2, 2], P [2, 4, 4, 2]),
+               (P [1], P [1, 1], P [1, 1]),
+               (P [0], P [1, 1], P [0])]
+           ]
 
 
 -- Exercise 7 -----------------------------------------

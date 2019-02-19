@@ -18,6 +18,9 @@ instance (Num a, Eq a) => Eq (Poly a) where
 
 -- Exercise 3 -----------------------------------------
 
+withIndices :: Num a => [a] -> [(Int, a)]
+withIndices p = zip [0..] p
+
 instance (Num a, Eq a, Show a) => Show (Poly a) where
     show (P p) = showPoly p
 
@@ -25,7 +28,7 @@ showPoly :: (Num a, Eq a, Show a) => [a] -> String
 showPoly p = zeroIfEmpty poly
   where
     poly  = intercalate " + " $ reverse terms
-    terms = filter (not . null) $ map showPolyTerm $ zip [0..] p
+    terms = filter (not . null) $ map showPolyTerm $ withIndices p
 
 showPolyTerm :: (Num a, Eq a, Show a) => (Int, a) -> String
 showPolyTerm (_   , 0)      = ""
@@ -60,8 +63,17 @@ plus (P a) (P b) = P $ plus' a b
 
 -- Exercise 5 -----------------------------------------
 
+timesTerm :: Num a => [a] -> (Int, a) -> [a]
+timesTerm p (idx, fctr) = (take idx $ repeat 0) ++ map (*fctr) p
+
+times' :: Num a => [a] -> [a] -> [a]
+times' a b = result
+  where
+    intermdt = map (timesTerm b) (withIndices a)
+    result   = foldr plus' [0] intermdt
+
 times :: Num a => Poly a -> Poly a -> Poly a
-times = undefined
+times (P a) (P b) = P $ times' a b
 
 -- Exercise 6 -----------------------------------------
 
