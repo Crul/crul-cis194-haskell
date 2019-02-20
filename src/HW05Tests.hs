@@ -2,6 +2,9 @@ module HW05Tests where
 
 import Data.ByteString.Lazy (ByteString)
 import Data.ByteString.Lazy.Char8 as Char8
+import Data.Map.Strict (Map)
+
+import qualified Data.Map.Strict as Map
 
 import HW05
 import Testing
@@ -47,9 +50,26 @@ ex4Tests = [ Test "test findBadTs" testFindBadTs
            ]
 
 
+-- Exercise 5 -----------------------------------------
+
+testGetFlow :: ([Transaction], [(String, Integer)]) -> Bool
+testGetFlow (trns, flow) = getFlow trns == Map.fromList flow
+
+ex5Tests :: [Test]
+ex5Tests = [ Test "test getFlow" testGetFlow
+             [ ( [], [] )
+             , ( [Transaction "Kelly" "John" 10 ""], [("John", 10), ("Kelly", -10)] )
+             , ( [Transaction "Kelly" "John" 10 "", Transaction "John" "Kelly" 15 ""]
+               , [("John", -5), ("Kelly", 5)]
+               )
+             ]
+           ]
+
+
 -- All Tests ------------------------------------------
 
 allTests :: [Test]
 allTests = Prelude.concat [ ex1Tests
                           , ex4Tests
+                          , ex5Tests
                           ]

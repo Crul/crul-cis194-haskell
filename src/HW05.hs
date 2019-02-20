@@ -5,10 +5,12 @@ module HW05 where
 import Data.ByteString.Lazy (ByteString)
 import Data.Map.Strict (Map)
 import System.Environment (getArgs)
+import Data.Function (on)
+import Data.List (groupBy, sortBy)
 
 import qualified Data.Bits as DB
 import qualified Data.ByteString.Lazy as BS
--- import qualified Data.Map.Strict as Map
+import qualified Data.Map.Strict as Map
 
 import Parser
 
@@ -78,9 +80,24 @@ getBadTs victFPath trnsFPath = do
 
 
 -- Exercise 5 -----------------------------------------
+{--
+:{
+do
+  Just trans <- getBadTs "clues/victims.json" "clues/transactions.json"
+  return $ getFlow trans
+:}
+--}
 
 getFlow :: [Transaction] -> Map String Integer
-getFlow = undefined
+getFlow trns = Map.fromList finalB
+  where
+    positv = map (\tr -> (to tr  ,  amount tr)) trns
+    negatv = map (\tr -> (from tr, -amount tr)) trns
+    allBal = sortBy (compare `on` fst) $ positv ++ negatv
+    groupd = groupBy ((==) `on` fst) allBal
+    group' = map (\l -> (fst . head $ l, map snd l)) groupd
+    finalB = map (\(k,d) -> (k, sum d)) group'
+
 
 -- Exercise 6 -----------------------------------------
 
