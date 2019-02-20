@@ -56,9 +56,26 @@ parseFile fPth = do
   return $ decode fData
 
 -- Exercise 4 -----------------------------------------
+{--
+:{
+do (Just bad) <- getBadTs "clues/victims.json" "clues/transactions.json"
+   Prelude.putStr $ show $ Prelude.length bad
+   -- Prelude.putStr $ show $ Prelude.map Parser.tid bad
+:}
+--}
+
+findBadTs :: Maybe [TId] -> Maybe [Transaction] -> Maybe [Transaction]
+findBadTs Nothing     _           = Nothing
+findBadTs _           Nothing     = Nothing
+findBadTs (Just tids) (Just trns) = Just badTs
+  where badTs = filter (\t -> (tid t) `elem` tids) trns
 
 getBadTs :: FilePath -> FilePath -> IO (Maybe [Transaction])
-getBadTs = undefined
+getBadTs victFPath trnsFPath = do
+  victims <- parseFile victFPath :: IO (Maybe [TId])
+  transcs <- parseFile trnsFPath :: IO (Maybe [Transaction])
+  return $ findBadTs victims transcs
+
 
 -- Exercise 5 -----------------------------------------
 
