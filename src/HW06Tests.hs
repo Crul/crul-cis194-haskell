@@ -57,12 +57,34 @@ ex3Tests = [ Test "test streamToList" testStreamToList
            ]
 
 
+-- Exercise 4 -----------------------------------------
+
+testStreamFmap :: (String -> String) -> (String, String) -> Bool
+testStreamFmap fn (val, res) = expected == result
+  where expected = take 5 $ repeat res
+        result   = take 5 $ streamToList $ fmap fn $ constantStream val
+
+testStreamFmapAppend :: (String, String, String) -> Bool
+testStreamFmapAppend (val, appVal, res) = testStreamFmap (++ appVal) (val, res)
+
+testStreamFmapFirst :: (String, String) -> Bool
+testStreamFmapFirst (val, res) = testStreamFmap ((:[]) . head) (val, res)
+
+ex4Tests :: [Test]
+ex4Tests = [ Test "test Stream fmap (append)" testStreamFmapAppend
+             [("Foo", "Baz", "FooBaz"), ("1", "2", "12")]
+           , Test "test Stream fmap (first)" testStreamFmapFirst
+             [("Foo", "F"), ("987654321", "9")]
+           ]
+
+
 -- All Tests ------------------------------------------
 
 allTests :: [Test]
 allTests = concat [ ex1Tests
                   , ex2Tests
                   , ex3Tests
+                  , ex4Tests
                   ]
 
 main :: IO ()

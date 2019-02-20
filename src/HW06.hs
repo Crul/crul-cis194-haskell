@@ -32,8 +32,12 @@ streamToList (Cons c s) = c : streamToList s
 
 -- Exercise 4 -----------------------------------------
 
+listToStream :: [a] -> Stream a
+listToStream (x:xs) = Cons x $ listToStream xs
+
 instance Functor Stream where
-    fmap = undefined
+--  fmap :: Functor Stream => (a -> b) -> Stream a -> Stream b
+    fmap f a = listToStream $ map f (streamToList a)
 
 -- Exercise 5 -----------------------------------------
 
