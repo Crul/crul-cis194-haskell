@@ -110,3 +110,6 @@ allTests = concat [ ex1Tests
                   , ex6Tests
                   , ex7Tests
                   ]
+
+main :: IO ()
+main = putStrLn $ show $ runTests allTests

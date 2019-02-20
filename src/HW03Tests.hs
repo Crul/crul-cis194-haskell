@@ -184,3 +184,6 @@ allTests = concat [ ex1Tests
                   , ex4Tests
                   , progTests
                   ]
+
+main :: IO ()
+main = putStrLn $ show $ runTests allTests

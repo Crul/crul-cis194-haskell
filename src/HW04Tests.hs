@@ -122,3 +122,6 @@ allTests = concat [ ex2Tests,
                     ex7Tests,
                     ex9Tests
                   ]
+
+main :: IO ()
+main = putStrLn $ show $ runTests allTests
