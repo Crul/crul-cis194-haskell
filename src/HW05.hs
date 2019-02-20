@@ -5,8 +5,6 @@ module HW05 where
 import Data.ByteString.Lazy (ByteString)
 import Data.Map.Strict (Map)
 import System.Environment (getArgs)
-import Data.Function (on)
-import Data.List (groupBy, sortBy)
 
 import qualified Data.Bits as DB
 import qualified Data.ByteString.Lazy as BS
@@ -88,7 +86,14 @@ do
 :}
 --}
 
+adjustFlow :: Transaction -> Map String Integer -> Map String Integer
+adjustFlow (Transaction from to amount _) = addAmount from (-amount) . addAmount to amount
+    where addAmount = Map.insertWith (+)
+
 getFlow :: [Transaction] -> Map String Integer
+getFlow = foldr adjustFlow Map.empty
+
+{-- First attempt
 getFlow trns = Map.fromList finalB
   where
     positv = map (\tr -> (to tr  ,  amount tr)) trns
@@ -97,6 +102,7 @@ getFlow trns = Map.fromList finalB
     groupd = groupBy ((==) `on` fst) allBal
     group' = map (\l -> (fst . head $ l, map snd l)) groupd
     finalB = map (\(k,d) -> (k, sum d)) group'
+--}
 
 
 -- Exercise 6 -----------------------------------------
