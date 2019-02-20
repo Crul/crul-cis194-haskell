@@ -164,6 +164,8 @@ ex7Tests = [ Test "test rand" testRand
            ]
 
 
+-- Exercise 8 -----------------------------------------
+
 -- All Tests ------------------------------------------
 
 allTests :: [Test]

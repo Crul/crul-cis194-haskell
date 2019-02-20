@@ -7,6 +7,7 @@ CALL :Profile HW04Tests
 CALL :Profile HW05Tests
 CALL :Profile HW05 , "clues/dog-original.jpg clues/dog.jpg clues/transactions.json clues/victims.json clues/new-ids.json clues/new-transactions.json"
 CALL :Profile HW06Tests
+CALL :Profile HW06
 cd ..
 
 EXIT /B %ERRORLEVEL%

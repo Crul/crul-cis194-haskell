@@ -70,8 +70,15 @@ rand seed = sIterate nxt seed
   where nxt s = (1103515245 * s + 12345) `mod` 2147483648
 
 -- Exercise 8 -----------------------------------------
+{-- ghc HW06.hs -rtsopts -main-is HW06 && HW06.exe +RTS -s -h -i0.001
+Just (1096,2147482927)
+     610,600,760 bytes allocated in the heap
+  11,558,022,056 bytes copied during GC
+     105,295,608 bytes maximum residency (209 sample(s))
+       6,428,824 bytes maximum slop
+             190 MB total memory in use (0 MB lost due to fragmentation)
+--}
 
-{- Total Memory in use: ??? MB -}
 minMaxSlow :: [Int] -> Maybe (Int, Int)
 minMaxSlow [] = Nothing   -- no min or max if there are no elements
 minMaxSlow xs = Just (minimum xs, maximum xs)
