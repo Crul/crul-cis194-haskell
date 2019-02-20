@@ -66,10 +66,25 @@ ex5Tests = [ Test "test getFlow" testGetFlow
            ]
 
 
+-- Exercise 6 -----------------------------------------
+
+testGetCriminal :: ([(String, Integer)], String) -> Bool
+testGetCriminal (suspts, crimnl) = getCriminal (Map.fromList suspts) == crimnl
+
+ex6Tests :: [Test]
+ex6Tests = [ Test "test getCriminal" testGetCriminal
+             [ ([], "")
+             , ([("Kelly", 10),("John", 100)], "John")
+             , ([("Kelly", -10),("John", -20)], "Kelly")
+             ]
+           ]
+
+
 -- All Tests ------------------------------------------
 
 allTests :: [Test]
 allTests = Prelude.concat [ ex1Tests
                           , ex4Tests
                           , ex5Tests
+                          , ex6Tests
                           ]

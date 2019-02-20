@@ -5,6 +5,8 @@ module HW05 where
 import Data.ByteString.Lazy (ByteString)
 import Data.Map.Strict (Map)
 import System.Environment (getArgs)
+import Data.Function (on)
+import Data.List (sortBy)
 
 import qualified Data.Bits as DB
 import qualified Data.ByteString.Lazy as BS
@@ -106,11 +108,35 @@ getFlow trns = Map.fromList finalB
 
 
 -- Exercise 6 -----------------------------------------
+{--
+:{
+do
+  Just trans <- getBadTs "clues/victims.json" "clues/transactions.json"
+  return $ getCriminal $ getFlow trans
+:}
+--}
 
 getCriminal :: Map String Integer -> String
-getCriminal = undefined
+getCriminal = mainSuspect . sortSuspects
+  where
+    sortSuspects = sortBy (flip compare `on` snd) . Map.toList
+    mainSuspect ((crimnl, _):_) = crimnl
+    mainSuspect _               = ""
 
 -- Exercise 7 -----------------------------------------
+{--
+:{
+do
+undoTs (Map.fromList [ ("Haskell Curry", -20)
+                     , ("Simon Peyton Jones", 10)
+                     , ("Foo", 0)
+                     , ("Bar", 17)
+                     , ("Baz", -7)
+                     ]
+       )
+       ["a", "b", "c", "d", "e", "f"]
+:}
+--}
 
 undoTs :: Map String Integer -> [TId] -> [Transaction]
 undoTs = undefined
