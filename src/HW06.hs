@@ -54,10 +54,13 @@ sTake n (Cons a sa) = a : sTake (n-1) sa
 -- Exercise 6 -----------------------------------------
 
 nats :: Stream Integer
-nats = undefined
+nats = sIterate (+1) 0
 
 ruler :: Stream Integer
-ruler = undefined
+-- https://github.com/wangqr/CIS194/blob/master/HW06.hs
+ruler = sInterleave (sRepeat 0) (fmap (+1) ruler)
+-- https://github.com/ROKT-CIS-194/cis-194-homework/blob/master/2015/src/CIS194/ClaudioN/HW06.hs
+-- ruler = foldr1 sInterleave $ map sRepeat [0..]
 
 -- Exercise 7 -----------------------------------------
 
