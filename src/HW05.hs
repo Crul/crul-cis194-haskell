@@ -171,6 +171,10 @@ writeJSON :: ToJSON a => FilePath -> a -> IO ()
 writeJSON fPath d = BS.writeFile fPath (encode d)
 
 -- Exercise 9 -----------------------------------------
+{--
+Compile > ghc HW05.hs -main-is HW05
+Run     > HW05.exe "clues/dog-original.jpg" "clues/dog.jpg" "clues/transactions.json" "clues/victims.json" "clues/new-ids.json" "clues/new-transactions.json"
+--}
 
 doEverything :: FilePath -> FilePath -> FilePath -> FilePath -> FilePath
              -> FilePath -> IO String
