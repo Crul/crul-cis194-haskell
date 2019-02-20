@@ -105,6 +105,8 @@ ex7Tests = [ Test "test undoTs" testUndoTs
            ]
 
 
+-- Exercise 8 -----------------------------------------
+
 -- All Tests ------------------------------------------
 
 allTests :: [Test]

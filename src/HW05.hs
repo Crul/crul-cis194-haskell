@@ -165,9 +165,10 @@ undoTs' _      _      _      = []
 
 
 -- Exercise 8 -----------------------------------------
+-- writeJSON "test.json" [Transaction "John" "Kelly" 10 "id"]
 
 writeJSON :: ToJSON a => FilePath -> a -> IO ()
-writeJSON = undefined
+writeJSON fPath d = BS.writeFile fPath (encode d)
 
 -- Exercise 9 -----------------------------------------
 
