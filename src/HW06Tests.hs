@@ -1,6 +1,6 @@
 module HW06Tests where
 
-import HW06 (fibs1, fibs2, Stream(..), streamToList)
+import HW06 (fibs1, fibs2, Stream(..), streamToList, sRepeat, sIterate, sInterleave, sTake)
 import Testing
 
 -- Exercise 1 -----------------------------------------
@@ -41,11 +41,8 @@ ex2Tests = [ Test "test fibs2" testFibs2
 
 -- Exercise 3 -----------------------------------------
 
-constantStream :: String -> Stream String
-constantStream s = Cons s $ constantStream s
-
 testStreamToList :: (Int, String, [String]) -> Bool
-testStreamToList (len, val, res) = res == (take len $ streamToList $ constantStream val)
+testStreamToList (len, val, res) = res == (take len $ streamToList $ sRepeat val)
 
 ex3Tests :: [Test]
 ex3Tests = [ Test "test streamToList" testStreamToList
@@ -62,7 +59,7 @@ ex3Tests = [ Test "test streamToList" testStreamToList
 testStreamFmap :: (String -> String) -> (String, String) -> Bool
 testStreamFmap fn (val, res) = expected == result
   where expected = take 5 $ repeat res
-        result   = take 5 $ streamToList $ fmap fn $ constantStream val
+        result   = take 5 $ streamToList $ fmap fn $ sRepeat val
 
 testStreamFmapAppend :: (String, String, String) -> Bool
 testStreamFmapAppend (val, appVal, res) = testStreamFmap (++ appVal) (val, res)
@@ -78,6 +75,57 @@ ex4Tests = [ Test "test Stream fmap (append)" testStreamFmapAppend
            ]
 
 
+-- Exercise 5 -----------------------------------------
+
+testSRepeat :: Eq a => (Int, a, [a]) -> Bool
+testSRepeat (len, val, res) = res == (take len $ streamToList $ sRepeat val)
+
+testSIterateAppend :: Eq a => (Int, [a], [a], [[a]]) -> Bool
+testSIterateAppend (len, val, valApp, res) = res == (take len $ streamToList $ sIterate (++valApp) val)
+
+testSIterateTail :: Eq a => (Int, [a], [[a]]) -> Bool
+testSIterateTail (len, val, res) = res == (take len $ streamToList $ sIterate tail val)
+
+testSInterleave :: Eq a => (Int, Stream a, Stream a, [a]) -> Bool
+testSInterleave (len, a, b, res) = res == (take len $ streamToList $ sInterleave a b)
+
+testSTake :: Eq a => (Int, Stream a, [a]) -> Bool
+testSTake (len, s, res) = res == (sTake len s)
+
+ex5Tests :: [Test]
+ex5Tests = [ Test "test sRepeat" testSRepeat
+             [ (0, "Foo", [])
+             , (-1, "Foo", [])
+             , (5, "Foo", ["Foo","Foo","Foo","Foo","Foo"])
+             , (7, "a", ["a","a","a","a","a","a","a"])
+             ]
+           , Test "test sIterate append" testSIterateAppend
+             [ (0, "Foo", "Baz", [])
+             , (-1, "Foo", "Baz", [])
+             , (1, "Foo", "Baz", ["Foo"])
+             , (4, "Foo", "Baz", ["Foo", "FooBaz", "FooBazBaz", "FooBazBazBaz"])
+             ]
+           , Test "test sIterate tail" testSIterateTail
+             [ (0, "Foo", [])
+             , (-1, "Foo", [])
+             , (1, "Foo", ["Foo"])
+             , (4, "FooBaz", ["FooBaz", "ooBaz", "oBaz", "Baz"])
+             ]
+           , Test "test sInterleave" testSInterleave
+             [ (0, sRepeat "a", sRepeat "a", [])
+             , (-1, sRepeat "a", sRepeat "b", [])
+             , (5, sRepeat "a", sRepeat "b", ["a","b","a","b","a"])
+             , (7, sIterate (++"z") "a", sRepeat "b", ["a","b","az","b","azz","b","azzz"])
+             ]
+           , Test "test sTake" testSTake
+             [ (0, sRepeat "a", [])
+             , (-1, sRepeat "a", [])
+             , (5, sRepeat "a", ["a","a","a","a","a"])
+             , (5, sIterate (++"z") "a", ["a","az","azz","azzz","azzzz"])
+             ]
+           ]
+
+
 -- All Tests ------------------------------------------
 
 allTests :: [Test]
@@ -85,6 +133,7 @@ allTests = concat [ ex1Tests
                   , ex2Tests
                   , ex3Tests
                   , ex4Tests
+                  , ex5Tests
                   ]
 
 main :: IO ()
