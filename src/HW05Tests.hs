@@ -80,6 +80,31 @@ ex6Tests = [ Test "test getCriminal" testGetCriminal
            ]
 
 
+-- Exercise 7 -----------------------------------------
+
+testUndoTs :: ([(String, Integer)], [TId], [Transaction]) -> Bool
+testUndoTs (flow, tids, trns) = undoTs (Map.fromList flow) tids == trns
+
+ex7Tests :: [Test]
+ex7Tests = [ Test "test undoTs" testUndoTs
+             [ ( [], [], [])
+             , ( [("Kelly", 10),("John", -100)], [""], [Transaction "Kelly" "John" 10 ""] )
+             , ( [ ("Haskell Curry", -20)
+                 , ("Simon Peyton Jones", 10)
+                 , ("Foo", 0)
+                 , ("Bar", 17)
+                 , ("Baz", -7)
+                 ]
+               , [ "a", "b", "c" ]
+               , [ Transaction "Bar" "Haskell Curry" 17 "a"
+                 , Transaction "Simon Peyton Jones" "Haskell Curry" 3 "b"
+                 , Transaction "Simon Peyton Jones""Baz" 7 "c"
+                 ]
+               )
+             ]
+           ]
+
+
 -- All Tests ------------------------------------------
 
 allTests :: [Test]
@@ -87,4 +112,5 @@ allTests = Prelude.concat [ ex1Tests
                           , ex4Tests
                           , ex5Tests
                           , ex6Tests
+                          , ex7Tests
                           ]

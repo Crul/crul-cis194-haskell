@@ -116,10 +116,13 @@ do
 :}
 --}
 
+sortByFlow :: [(String, Integer)] -> [(String, Integer)]
+sortByFlow = sortBy (flip compare `on` snd)
+
 getCriminal :: Map String Integer -> String
 getCriminal = mainSuspect . sortSuspects
   where
-    sortSuspects = sortBy (flip compare `on` snd) . Map.toList
+    sortSuspects = sortByFlow . Map.toList
     mainSuspect ((crimnl, _):_) = crimnl
     mainSuspect _               = ""
 
@@ -139,7 +142,27 @@ undoTs (Map.fromList [ ("Haskell Curry", -20)
 --}
 
 undoTs :: Map String Integer -> [TId] -> [Transaction]
-undoTs = undefined
+undoTs flow tids = undoTs' winners loosers tids
+  where
+    winners = sortByFlow $ Map.toList $ Map.filter (>0) flow
+    loosers = reverse $ sortByFlow $ Map.toList $ Map.filter (<0) flow
+
+undoTs' :: [(String, Integer)] -> [(String, Integer)] -> [TId] -> [Transaction]
+undoTs' (w:ws) (l:ls) (i:is) = trans : nextTrans
+  where
+    (winner, wAmnt) = w
+    (looser, lAmnt) = l
+    trAmnt          = min wAmnt (-lAmnt)
+    w'              = nextFlow (winner, wAmnt - trAmnt) (>0)
+    l'              = nextFlow (looser, lAmnt + trAmnt) (<0)
+    trans           = Transaction (fst w) (fst l) trAmnt i
+    nextTrans       = undoTs' (w'++ws) (l'++ls) is
+
+    nextFlow :: (String, Integer) -> (Integer -> Bool) -> [(String, Integer)]
+    nextFlow p@(_, amnt) amntCond = if amntCond amnt then [p] else []
+
+undoTs' _      _      _      = []
+
 
 -- Exercise 8 -----------------------------------------
 
