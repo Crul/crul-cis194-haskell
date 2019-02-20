@@ -21,6 +21,8 @@ ex1Tests = [ Test "test getSecret" testGetSecret
 
 -- Exercise 2 -----------------------------------------
 
+-- Exercise 3 -----------------------------------------
+
 -- All Tests ------------------------------------------
 
 allTests :: [Test]

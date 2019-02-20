@@ -47,9 +47,13 @@ decryptWithKey pssw fPth = do
 
 
 -- Exercise 3 -----------------------------------------
+-- parseFile "clues/victims.json" :: IO (Maybe [Parser.TId])
+-- parseFile "clues/transactions.json" :: IO (Maybe [Parser.Transaction])
 
 parseFile :: FromJSON a => FilePath -> IO (Maybe a)
-parseFile = undefined
+parseFile fPth = do
+  fData <- BS.readFile $ fPth
+  return $ decode fData
 
 -- Exercise 4 -----------------------------------------
 
