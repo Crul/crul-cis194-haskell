@@ -16,7 +16,7 @@ fibs1 = map fib [0..]
 -- Exercise 2 -----------------------------------------
 
 fibs2 :: [Integer]
-fibs2 = undefined
+fibs2 = 1 : 1 : zipWith (+) fibs2 (tail fibs2)
 
 -- Exercise 3 -----------------------------------------
 
