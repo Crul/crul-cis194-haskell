@@ -133,5 +133,31 @@ main = print $ minMax $ sTake 1000000 $ rand 7666532
 
 -- Exercise 10 ----------------------------------------
 
+data Matrix2x2 a = M2x2 a a a a deriving (Eq)
+
+instance Show a => Show (Matrix2x2 a) where
+  show (M2x2 a b c d) = "[ " ++ (show a) ++ " " ++ (show b) ++
+                        "\n  " ++ (show c) ++ " " ++ (show d) ++ " ]"
+
+instance Num a => Num (Matrix2x2 a) where
+    (*) (M2x2 a1 b1 c1 d1) (M2x2 a2 b2 c2 d2) = M2x2 s11 s12 s21 s22
+      where s11 = a1*a2 + b1*b2
+            s12 = a1*c2 + b1*d2
+            s21 = c1*a2 + d1*b2
+            s22 = c1*c2 + d1*d2
+
+    -- No meaningful definitions exist
+    (+)         = undefined
+    negate      = undefined
+    fromInteger = undefined
+    abs         = undefined
+    signum      = undefined
+
+fibMatrix :: Matrix2x2 Integer
+fibMatrix = M2x2 1 1
+                 1 0
+
 fastFib :: Int -> Integer
-fastFib = undefined
+fastFib 0 = 1
+fastFib n = nFib
+  where (M2x2 nFib _ _ _) = fibMatrix ^ n
