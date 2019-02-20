@@ -1,6 +1,6 @@
 module HW06Tests where
 
-import HW06 (fibs1, fibs2)
+import HW06 (fibs1, fibs2, Stream(..), streamToList)
 import Testing
 
 -- Exercise 1 -----------------------------------------
@@ -39,11 +39,30 @@ ex2Tests = [ Test "test fibs2" testFibs2
            ]
 
 
+-- Exercise 3 -----------------------------------------
+
+constantStream :: String -> Stream String
+constantStream s = Cons s $ constantStream s
+
+testStreamToList :: (Int, String, [String]) -> Bool
+testStreamToList (len, val, res) = res == (take len $ streamToList $ constantStream val)
+
+ex3Tests :: [Test]
+ex3Tests = [ Test "test streamToList" testStreamToList
+             [ (0, "Foo", [])
+             , (-1, "Foo", [])
+             , (5, "Foo", ["Foo","Foo","Foo","Foo","Foo"])
+             , (7, "a", ["a","a","a","a","a","a","a"])
+             ]
+           ]
+
+
 -- All Tests ------------------------------------------
 
 allTests :: [Test]
 allTests = concat [ ex1Tests
                   , ex2Tests
+                  , ex3Tests
                   ]
 
 main :: IO ()

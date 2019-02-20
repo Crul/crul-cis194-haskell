@@ -28,7 +28,7 @@ instance Show a => Show (Stream a) where
              ++ ",..."
 
 streamToList :: Stream a -> [a]
-streamToList = undefined
+streamToList (Cons c s) = c : streamToList s
 
 -- Exercise 4 -----------------------------------------
 
