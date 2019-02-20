@@ -2,15 +2,16 @@
 module HW06 where
 
 import Data.List
-import Data.Functor
+-- import Data.Functor
 
 -- Exercise 1 -----------------------------------------
 
 fib :: Integer -> Integer
-fib = undefined
+fib n | n < 2     = 1
+      | otherwise = fib (n-2) + fib (n-1)
 
 fibs1 :: [Integer]
-fibs1 = undefined
+fibs1 = map fib [0..]
 
 -- Exercise 2 -----------------------------------------
 
