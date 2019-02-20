@@ -1,6 +1,6 @@
 module HW06Tests where
 
-import HW06 (fibs1, fibs2, Stream(..), streamToList, sRepeat, sIterate, sInterleave, sTake, nats, ruler, rand)
+import HW06 (fibs1, fibs2, Stream(..), streamToList, sRepeat, sIterate, sInterleave, sTake, nats, ruler, rand, minMaxSlow, minMax)
 import Testing
 
 -- Exercise 1 -----------------------------------------
@@ -166,6 +166,18 @@ ex7Tests = [ Test "test rand" testRand
 
 -- Exercise 8 -----------------------------------------
 
+-- Exercise 9 -----------------------------------------
+
+testMinMax :: (Int, Int) -> Bool
+testMinMax (len, seed) = minMax vals == minMaxSlow vals
+  where vals = sTake len $ rand seed
+
+ex9Tests :: [Test]
+ex9Tests = [ Test "test minMax" testMinMax
+             [(0, 0), (1, 1), (10, 27), (50, 31415926)]
+           ]
+
+
 -- All Tests ------------------------------------------
 
 allTests :: [Test]
@@ -176,6 +188,7 @@ allTests = concat [ ex1Tests
                   , ex5Tests
                   , ex6Tests
                   , ex7Tests
+                  , ex9Tests
                   ]
 
 main :: IO ()

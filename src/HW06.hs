@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -Wall #-}
+{-# LANGUAGE BangPatterns #-}
 module HW06 where
 
 import Data.List
@@ -84,13 +85,51 @@ minMaxSlow [] = Nothing   -- no min or max if there are no elements
 minMaxSlow xs = Just (minimum xs, maximum xs)
 
 -- Exercise 9 -----------------------------------------
+{-- ghc HW06.hs -rtsopts -main-is HW06 && HW06.exe +RTS -s -h -i0.001
+Just (1096,2147482927)
+     552,048,944 bytes allocated in the heap
+         494,568 bytes copied during GC
+          42,808 bytes maximum residency (173 sample(s))
+          26,824 bytes maximum slop
+               2 MB total memory in use (0 MB lost due to fragmentation)
+--}
 
-{- Total Memory in use: ??? MB -}
 minMax :: [Int] -> Maybe (Int, Int)
-minMax = undefined
+minMax []       = Nothing   -- no min or max if there are no elements
+-- https://wiki.haskell.org/Foldr_Foldl_Foldl'
+minMax (x:xs)   = Just $ foldl' minMax' (x, x) xs
+  where minMax' (!mm, !mM) v = (min mm v, max mM v)
+
+{- 4th attempt: 144 MB total memory in use
+minMax (x:xs)   = Just $ foldl minMax' (x, x) xs
+  where minMax' (!mm, !mM) v = (min mm v, max mM v)
+-}
+
+{- 3rd attempt: 302 MB total memory in use
+minMax (x:xs)   = Just $ foldr minMax' (x, x) xs
+  where minMax' y (!mm, !mM) = (min y mm, max y mM)
+-}
+
+{- 2nd attempt: 249 MB total memory in use
+minMax (x:xs)   = Just $ foldr minMax' (x, x) xs
+  where minMax' y (mm, mM) = (min y mm, max y mM)
+-}
+
+{- 1st attempt: 279 MB total memory in use
+minMax (x:xs)   = Just ( safeFn min x mins, safeFn max x maxs )
+  where
+    (mins, maxs) = miiToMiMi $ minMax xs
+    miiToMiMi :: Maybe (Int, Int) -> (Maybe Int, Maybe Int)
+    miiToMiMi Nothing      = (Nothing, Nothing)
+    miiToMiMi (Just (a,b)) = (Just a , Just b)
+    safeFn :: (Int -> Int -> Int) -> Int -> Maybe Int -> Int
+    safeFn _ a Nothing  = a
+    safeFn f a (Just b) = f a b
+-}
 
 main :: IO ()
-main = print $ minMaxSlow $ sTake 1000000 $ rand 7666532
+main = print $ minMax $ sTake 1000000 $ rand 7666532
+-- main = print $ minMaxSlow $ sTake 1000000 $ rand 7666532
 
 -- Exercise 10 ----------------------------------------
 
