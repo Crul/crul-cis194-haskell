@@ -66,7 +66,8 @@ ruler = sInterleave (sRepeat 0) (fmap (+1) ruler)
 
 -- | Implementation of C rand
 rand :: Int -> Stream Int
-rand = undefined
+rand seed = sIterate nxt seed
+  where nxt s = (1103515245 * s + 12345) `mod` 2147483648
 
 -- Exercise 8 -----------------------------------------
 

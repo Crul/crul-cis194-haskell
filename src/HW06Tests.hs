@@ -1,6 +1,6 @@
 module HW06Tests where
 
-import HW06 (fibs1, fibs2, Stream(..), streamToList, sRepeat, sIterate, sInterleave, sTake, nats, ruler)
+import HW06 (fibs1, fibs2, Stream(..), streamToList, sRepeat, sIterate, sInterleave, sTake, nats, ruler, rand)
 import Testing
 
 -- Exercise 1 -----------------------------------------
@@ -148,6 +148,22 @@ ex6Tests = [ Test "test nats" testNats
              ]
            ]
 
+
+-- Exercise 7 -----------------------------------------
+
+testRand :: (Int, Int, [Int]) -> Bool
+testRand (n, seed, res) = sTake n (rand seed) == res
+
+ex7Tests :: [Test]
+ex7Tests = [ Test "test rand" testRand
+             [ (0, 0, [])
+             , (-1, 0, [])
+             , (5, 13, [13, 1460808642, 907931091, 761707792, 1824100361])
+             , (7, 31564, [31564, 1317918613, 1012031658, 906175643, 526385208, 2134988817, 97377654])
+             ]
+           ]
+
+
 -- All Tests ------------------------------------------
 
 allTests :: [Test]
@@ -157,6 +173,7 @@ allTests = concat [ ex1Tests
                   , ex4Tests
                   , ex5Tests
                   , ex6Tests
+                  , ex7Tests
                   ]
 
 main :: IO ()
