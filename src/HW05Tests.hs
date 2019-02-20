@@ -6,7 +6,7 @@ import Data.Map.Strict (Map)
 
 import qualified Data.Map.Strict as Map
 
-import HW05
+import HW05 (getSecret', findBadTs, getFlow, getCriminal, undoTs)
 import Testing
 import Parser
 
@@ -116,3 +116,6 @@ allTests = Prelude.concat [ ex1Tests
                           , ex6Tests
                           , ex7Tests
                           ]
+
+main :: IO ()
+main = Prelude.putStrLn $ Prelude.show $ runTests allTests
