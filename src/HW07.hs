@@ -9,7 +9,7 @@ import Control.Monad hiding (mapM, liftM)
 import Control.Monad.Random hiding (mapM, liftM)
 -- import Data.Functor
 -- import Data.Monoid
-import Data.Vector (Vector, (!?), (//)) --  , cons, (!)
+import Data.Vector (Vector, (!), (!?), (//)) --  , cons
 -- import System.Random
 
 import qualified Data.Vector as V
@@ -76,7 +76,37 @@ randomVecR n rng = V.fromList <$> replicateM n (getRandomR rng)
 -- Exercise 5 -----------------------------------------
 
 shuffle :: Vector a -> Rnd (Vector a)
-shuffle = undefined
+shuffle vec = shuffle' (pred $ length vec) vec
+
+shuffle' :: Int -> Vector a -> Rnd (Vector a)
+shuffle' (-1) vec = return vec
+shuffle'  i   vec = do j <- getRandomR (0, i)
+                       let vec' = vec // [(i, vec!j), (j, vec!i)]
+                       shuffle' (pred i) vec'
+
+{-
+shuffle v = (v //) `liftM` go v (getN $ length v)
+  where go :: Vector a -> [Int] -> Rnd ([(Int, a)])
+        go v' as = (zip' v' as) `liftM` mapM (\x -> getRandomR $ getPair x) as
+-}
+
+{-
+shuffle vec = sub vec $ len - 1
+  where
+    sub v 0 = return v
+    sub v i = do
+        newV <- liftM (vswap v i) $ getRandomR (0, i)
+        sub newV $ i - 1
+    vswap v i j = v // [(i, v ! j), (j, v ! i)]
+    len = length vec
+-}
+
+{-
+shuffle v = foldl (\v2 (i, j) -> fromJust $ swapV i j v2) v <$> mapM pair is
+  where n  = length v
+        is = [n-1,n-2..1]
+        pair i = ((,) i) <$> getRandomR (0, i)
+-}
 
 -- Exercise 6 -----------------------------------------
 

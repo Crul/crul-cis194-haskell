@@ -7,7 +7,7 @@ import Control.Monad.Random hiding (mapM, liftM)
 
 import qualified Data.Vector as V
 
-import HW07 (liftM, swapV, mapM, getElts, randomElt, randomVec, randomVecR)
+import HW07 (liftM, swapV, mapM, getElts, randomElt, randomVec, randomVecR, shuffle)
 import Testing
 import Data.List
 
@@ -125,6 +125,24 @@ ex4Tests = [ Test "test randomVec" testRandomVec
            ]
 
 
+-- Exercise 5 -----------------------------------------
+-- To get deterministic test result:
+-- evalRnd' (shuffle $ V.fromList [1,2,3,4,5,6])
+-- evalRnd' (shuffle $ V.fromList [10,20,30,40,50,60,70])
+
+--shuffle :: Vector a -> Rnd (Vector a)
+testShuffle :: Eq a => ([a], [a]) -> Bool
+testShuffle (vec, res) = evalRnd' (shuffle $ V.fromList vec) == V.fromList res
+
+ex5Tests :: [Test]
+ex5Tests = [ Test "test shuffle" testShuffle
+             [ ([], [])
+             , ([1,2,3,4,5,6], [2,3,1,5,4,6])
+             , ([10,20,30,40,50,60,70], [70,50,20,30,40,60,10])
+             ]
+           ]
+
+
 -- All Tests -------------------------------------------
 
 allTests :: [Test]
@@ -132,6 +150,7 @@ allTests = concat [ ex1Tests
                   , ex2Tests
                   , ex3Tests
                   , ex4Tests
+                  , ex5Tests
                   ]
 
 main :: IO ()
