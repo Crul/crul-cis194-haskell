@@ -111,7 +111,22 @@ shuffle v = foldl (\v2 (i, j) -> fromJust $ swapV i j v2) v <$> mapM pair is
 -- Exercise 6 -----------------------------------------
 
 partitionAt :: Ord a => Vector a -> Int -> (Vector a, a, Vector a)
-partitionAt = undefined
+partitionAt vec idx = (V.filter (<val) vec', val, V.filter (>=val) vec')
+  where val  = vec ! idx
+        vec' = (V.take idx vec) V.++ (V.drop (succ idx) vec)
+
+{-
+partitionAt v i = (lt, p, gte)
+  where p   = v ! i
+        lt  = V.ifilter (\vi va -> va <  p && vi /= i) v
+        gte = V.ifilter (\vi va -> va >= p && vi /= i) v
+-}
+
+{-
+partitionAt v p = (mfilter (pivot >) v', pivot, mfilter (pivot <=) v')
+  where pivot = v!p
+        v' = V.take p v V.++ V.drop (p+1) v
+-}
 
 -- Exercise 7 -----------------------------------------
 

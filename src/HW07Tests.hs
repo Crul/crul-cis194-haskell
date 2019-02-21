@@ -7,7 +7,7 @@ import Control.Monad.Random hiding (mapM, liftM)
 
 import qualified Data.Vector as V
 
-import HW07 (liftM, swapV, mapM, getElts, randomElt, randomVec, randomVecR, shuffle)
+import HW07 (liftM, swapV, mapM, getElts, randomElt, randomVec, randomVecR, shuffle, partitionAt)
 import Testing
 import Data.List
 
@@ -143,6 +143,24 @@ ex5Tests = [ Test "test shuffle" testShuffle
            ]
 
 
+-- Exercise 6 -----------------------------------------
+
+testPartitionAt :: Ord a => ([a], Int, [a], a, [a]) -> Bool
+testPartitionAt (vec, val, lft, elm, rgt) = result == expected
+  where result   = partitionAt (V.fromList vec) val
+        expected = (V.fromList lft, elm, V.fromList rgt)
+
+ex6Tests :: [Test]
+ex6Tests = [ Test "test partitionAt" testPartitionAt
+             [ ([5, 2, 8, 3, 6, 1], 3, [2, 1], 3, [5, 8, 6])
+             , ([1, 6, 4, 7, 2, 4], 2, [1, 2], 4, [6, 7, 4])
+             , ([1, 6, 2, 7, 2, 4], 3, [1, 6, 2, 2, 4], 7, [])
+             , ([1, 6, 2, 7, 2, 1], 0, [], 1, [6, 2, 7, 2, 1])
+             , ([1, 6, 2, 7, 2, 1], 5, [], 1, [1, 6, 2, 7, 2])
+             ]
+           ]
+
+
 -- All Tests -------------------------------------------
 
 allTests :: [Test]
@@ -151,6 +169,7 @@ allTests = concat [ ex1Tests
                   , ex3Tests
                   , ex4Tests
                   , ex5Tests
+                  , ex6Tests
                   ]
 
 main :: IO ()
