@@ -6,7 +6,7 @@ import Prelude hiding (mapM)
 import Cards
 
 import Control.Monad hiding (mapM, liftM)
-import Control.Monad.Random
+import Control.Monad.Random hiding (mapM, liftM)
 -- import Data.Functor
 -- import Data.Monoid
 import Data.Vector (Vector, (!?), (//)) --  , cons, (!)
@@ -31,10 +31,10 @@ swapV idx1 idx2 vec = liftM2 assign (vec !? idx1) (vec !? idx2)
 -- Exercise 2 -----------------------------------------
 
 mapM :: Monad m => (a -> m b) -> [a] -> m [b]
-mapM = undefined
+mapM f xs = sequence $ map f xs
 
 getElts :: [Int] -> Vector a -> Maybe [a]
-getElts = undefined
+getElts idxs vec = mapM (\idx -> vec !? idx) idxs
 
 -- Exercise 3 -----------------------------------------
 
