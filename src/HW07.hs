@@ -7,10 +7,10 @@ import Cards
 
 import Control.Monad hiding (mapM, liftM)
 import Control.Monad.Random
-import Data.Functor
-import Data.Monoid
-import Data.Vector (Vector, cons, (!), (!?), (//))
-import System.Random
+-- import Data.Functor
+-- import Data.Monoid
+import Data.Vector (Vector, (!?), (//)) --  , cons, (!)
+-- import System.Random
 
 import qualified Data.Vector as V
 
@@ -18,10 +18,15 @@ import qualified Data.Vector as V
 -- Exercise 1 -----------------------------------------
 
 liftM :: Monad m => (a -> b) -> m a -> m b
-liftM = undefined
+liftM f ma = do a <- ma
+                return $ f a
+-- liftM f ma = ma >>= \a -> return $ f a
+-- liftM f ma = [ f x | x <- ma ]
 
 swapV :: Int -> Int -> Vector a -> Maybe (Vector a)
-swapV = undefined
+swapV idx1 idx2 vec = liftM2 assign (vec !? idx1) (vec !? idx2)
+  where assign elm1 elm2 = vec // [(idx1, elm2), (idx2, elm1)]
+
 
 -- Exercise 2 -----------------------------------------
 
