@@ -7,7 +7,7 @@ import Control.Monad.Random hiding (mapM, liftM)
 
 import qualified Data.Vector as V
 
-import HW07 (liftM, swapV, mapM, getElts, randomElt, randomVec, randomVecR, shuffle, partitionAt)
+import HW07 (liftM, swapV, mapM, getElts, randomElt, randomVec, randomVecR, shuffle, partitionAt, qsort)
 import Testing
 import Data.List
 
@@ -161,6 +161,19 @@ ex6Tests = [ Test "test partitionAt" testPartitionAt
            ]
 
 
+-- Exercise 7 -----------------------------------------
+
+testQsort :: Ord a => ([a], [a]) -> Bool
+testQsort (vec, res) = qsort (V.fromList vec) == V.fromList res
+
+ex7Tests :: [Test]
+ex7Tests = [ Test "test qsort" testQsort
+             [ ([5,2,8,3,6,1], [1,2,3,5,6,8])
+             , ([1,2,1,2,1,2], [1,1,1,2,2,2])
+             ]
+           ]
+
+
 -- All Tests -------------------------------------------
 
 allTests :: [Test]
@@ -170,6 +183,7 @@ allTests = concat [ ex1Tests
                   , ex4Tests
                   , ex5Tests
                   , ex6Tests
+                  , ex7Tests
                   ]
 
 main :: IO ()

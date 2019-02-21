@@ -9,7 +9,7 @@ import Control.Monad hiding (mapM, liftM)
 import Control.Monad.Random hiding (mapM, liftM)
 -- import Data.Functor
 -- import Data.Monoid
-import Data.Vector (Vector, (!), (!?), (//)) --  , cons
+import Data.Vector (Vector, cons, (!), (!?), (//))
 -- import System.Random
 
 import qualified Data.Vector as V
@@ -137,7 +137,9 @@ quicksort (x:xs) = quicksort [ y | y <- xs, y < x ]
                    <> (x : quicksort [ y | y <- xs, y >= x ])
 
 qsort :: Ord a => Vector a -> Vector a
-qsort = undefined
+qsort vec | length vec < 2 = vec
+          | otherwise      = (qsort less) V.++ cons curr (qsort grtr)
+            where (less, curr, grtr) = partitionAt vec 0
 
 -- Exercise 8 -----------------------------------------
 
