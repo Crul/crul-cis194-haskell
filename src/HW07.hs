@@ -191,7 +191,21 @@ nextCard deck | V.null deck = Nothing
 -- Exercise 12 ----------------------------------------
 
 getCards :: Int -> Deck -> Maybe ([Card], Deck)
-getCards = undefined
+getCards = getCards' []
+  where getCards' cs 0 deck = Just (cs, deck)
+        getCards' cs n deck = addCard (nextCard deck)
+          where addCard mbCardDeck = do
+                 (card, deck') <- mbCardDeck
+                 getCards' (cs ++ [card]) (pred n) deck'
+
+{-- 1st attempt
+  where
+    getCards' cs 0 deck = Just (cs, deck)
+    getCards' cs n deck = addCard (nextCard deck)
+      where
+        addCard Nothing              = Nothing  <--- NEEDED BECAUSE PATTERN MATCHING INSTEAD OF a <- m a
+        addCard (Just (card, deck')) = getCards' (cs ++ [card]) (pred n) deck'
+--}
 
 -- Exercise 13 ----------------------------------------
 

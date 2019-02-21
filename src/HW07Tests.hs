@@ -8,7 +8,7 @@ import Data.Vector (Vector, (!))
 
 import qualified Data.Vector as V
 
-import HW07 (liftM, swapV, mapM, getElts, randomElt, randomVec, randomVecR, shuffle, partitionAt, qsort, qsortR, select, allCards, newDeck, nextCard)
+import HW07 (liftM, swapV, mapM, getElts, randomElt, randomVec, randomVecR, shuffle, partitionAt, qsort, qsortR, select, allCards, newDeck, nextCard, getCards)
 import Cards
 import Testing
 import Data.List
@@ -254,6 +254,30 @@ ex11Tests = [ Test "test nextCard" testNextCard
            ]
 
 
+-- Exercise 12 -----------------------------------------
+
+testGetCards :: (Int, Deck, Maybe ([Card], Deck)) -> Bool
+testGetCards (n, deck, res) = getCards n deck == res
+
+ex12Tests = [ Test "test getCards" testGetCards
+             [ ( 5, V.fromList [], Nothing )
+             , ( 1, V.fromList [(Card Ace Heart)]
+               , Just ([(Card Ace Heart)], V.fromList [])
+               )
+             , ( 2, V.fromList [(Card Ace Heart)], Nothing )
+             , ( 1, V.fromList [(Card King Spade), (Card Ace Heart)]
+               , Just ([(Card King Spade)], V.fromList [(Card Ace Heart)])
+               )
+             , ( 2, V.fromList [(Card King Spade), (Card Ace Heart), (Card Seven Diamond)]
+               , Just ([(Card King Spade), (Card Ace Heart)], V.fromList [(Card Seven Diamond)])
+               )
+             , ( 0, V.fromList [(Card King Spade), (Card Ace Heart), (Card Seven Diamond)]
+               , Just ([], V.fromList [(Card King Spade), (Card Ace Heart), (Card Seven Diamond)])
+               )
+             ]
+           ]
+
+
 -- All Tests -------------------------------------------
 
 allTests :: [Test]
@@ -268,6 +292,7 @@ allTests = concat [ ex1Tests
                   , ex9Tests
                   , ex10Tests
                   , ex11Tests
+                  , ex12Tests
                   ]
 
 main :: IO ()
