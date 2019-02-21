@@ -157,10 +157,22 @@ qsortR vec | len < 2   = return vec
            where len = length vec
 
 -- Exercise 9 -----------------------------------------
+-- evalRandIO $ select 3 (V.fromList [4,2,3,1,5,6,7])
 
 -- Selection
 select :: Ord a => Int -> Vector a -> Rnd (Maybe a)
-select = undefined
+select idx vec | idx >= len = return Nothing
+               | otherwise  = do rndIdx <- getRandomR (0, pred len)
+                                 retOrSel $ partitionAt vec rndIdx
+
+               where len = length vec
+                     retOrSel (less,curr,grtr) | idx == lenL = return $ Just curr
+                                               | otherwise = select' lenL less grtr
+                                                 where lenL = length less
+
+                     select' lenL less grtr | idx < lenL = select idx less
+                                            | otherwise  = select (idx-lenL-1) grtr
+
 
 -- Exercise 10 ----------------------------------------
 
