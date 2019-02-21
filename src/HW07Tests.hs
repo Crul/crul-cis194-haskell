@@ -3,12 +3,15 @@ module HW07Tests where
 -- https://github.com/totahuanocotl/haskell/blob/48225a0aa95237587e13eae068b3e6b69cc84c18/test/LearningHaskell/HW07Tests.hs
 
 import Prelude hiding (mapM)
+import Control.Monad.Random hiding (mapM, liftM)
 
 import qualified Data.Vector as V
 
-import HW07 (liftM, swapV, mapM, getElts)
+import HW07 (liftM, swapV, mapM, getElts, randomElt)
 import Testing
 import Data.List
+
+evalRnd' r = (evalRand r) (mkStdGen 0)
 
 -- Exercise 1 -----------------------------------------
 
@@ -72,11 +75,29 @@ ex2Tests = [ Test "test mapM Int" testMapMMaybe
            ]
 
 
+-- Exercise 3 -----------------------------------------
+-- To get deterministic test result:
+-- evalRnd' (randomElt (V.fromList [4,2,3,1,5,6,7]))
+-- evalRnd' (randomElt (V.fromList [1,2,3]))
+
+testRandomElt :: Eq a => ([a], Maybe a) -> Bool
+testRandomElt (vec, res) = evalRnd' (randomElt (V.fromList vec)) == res
+
+ex3Tests :: [Test]
+ex3Tests = [ Test "test randomElt" testRandomElt
+             [ ([4,2,3,1,5,6,7], Just 4)
+             , ([1,2,3], Just 3)
+             , ([], Nothing)
+             ]
+           ]
+
+
 -- All Tests -------------------------------------------
 
 allTests :: [Test]
 allTests = concat [ ex1Tests
                   , ex2Tests
+                  , ex3Tests
                   ]
 
 main :: IO ()

@@ -37,11 +37,22 @@ getElts :: [Int] -> Vector a -> Maybe [a]
 getElts idxs vec = mapM (\idx -> vec !? idx) idxs
 
 -- Exercise 3 -----------------------------------------
+-- evalRandIO $ randomElt (V.fromList [])
+-- evalRandIO $ randomElt (V.fromList [0])
 
 type Rnd a = Rand StdGen a
 
 randomElt :: Vector a -> Rnd (Maybe a)
-randomElt = undefined
+randomElt v = (v !?) <$> getRandomR (0, pred $ length v)
+
+-- randomElt v = liftM (v !?) $ getRandomR (0, length v - 1)
+-- randomElt v = (v !?) `liftM` getRandomR (0, length v - 1)
+
+{- 1st attempt
+randomElt vec = do
+  rndIdx <- getRandomR (0, length vec)
+  return $ (vec !? rndIdx)
+-}
 
 -- Exercise 4 -----------------------------------------
 
