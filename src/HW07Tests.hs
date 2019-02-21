@@ -7,7 +7,7 @@ import Control.Monad.Random hiding (mapM, liftM)
 
 import qualified Data.Vector as V
 
-import HW07 (liftM, swapV, mapM, getElts, randomElt, randomVec, randomVecR, shuffle, partitionAt, qsort)
+import HW07 (liftM, swapV, mapM, getElts, randomElt, randomVec, randomVecR, shuffle, partitionAt, qsort, qsortR)
 import Testing
 import Data.List
 
@@ -174,6 +174,20 @@ ex7Tests = [ Test "test qsort" testQsort
            ]
 
 
+-- Exercise 8 -----------------------------------------
+
+testQsortR :: Ord a => ([a], [a]) -> Bool
+testQsortR (vec, res) = evalRnd' (qsortR (V.fromList vec)) == V.fromList res
+
+ex8Tests :: [Test]
+ex8Tests = [ Test "test qsortR" testQsortR
+             [ ([5,2,8,3,6,1], [1,2,3,5,6,8])
+             , ([1,2,1,2,1,2], [1,1,1,2,2,2])
+             , (reverse [1..1000], [1..1000])
+             ]
+           ]
+
+
 -- All Tests -------------------------------------------
 
 allTests :: [Test]
@@ -184,6 +198,7 @@ allTests = concat [ ex1Tests
                   , ex5Tests
                   , ex6Tests
                   , ex7Tests
+                  , ex8Tests
                   ]
 
 main :: IO ()

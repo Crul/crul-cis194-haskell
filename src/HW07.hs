@@ -142,9 +142,19 @@ qsort vec | length vec < 2 = vec
             where (less, curr, grtr) = partitionAt vec 0
 
 -- Exercise 8 -----------------------------------------
+-- evalRandIO $ qsortR (V.fromList [5,2,8,7,1,3,4])
+-- evalRandIO $ qsortR (V.fromList [1,2,1,2,1,2,1,2,1,2])
+-- evalRandIO $ qsortR (V.fromList $ reverse [1..10000])
 
 qsortR :: Ord a => Vector a -> Rnd (Vector a)
-qsortR = undefined
+qsortR vec | len < 2   = return vec
+           | otherwise = do
+              rndIdx <- getRandomR (0, pred len)
+              let (less, curr, grtr) = partitionAt vec rndIdx
+              less' <- qsortR less
+              grtr' <- qsortR grtr
+              return $ less' V.++ (cons curr grtr')
+           where len = length vec
 
 -- Exercise 9 -----------------------------------------
 
