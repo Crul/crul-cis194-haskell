@@ -55,12 +55,23 @@ randomElt vec = do
 -}
 
 -- Exercise 4 -----------------------------------------
+-- evalRandIO $ randomVec 0
+-- evalRandIO $ randomVec 3
 
 randomVec :: Random a => Int -> Rnd (Vector a)
-randomVec = undefined
+randomVec n = V.fromList <$> replicateM n getRandom
+
+-- randomVec n = liftM V.fromList $ replicateM n getRandom
+
+-- 1st attempt
+-- randomVec n = sequence $ V.fromList $ map (\_ -> getRandom) [1..n]
+
+-- evalRandIO $ randomVecR 0 (0,0)
+-- evalRandIO $ randomVecR 3 (1,10)
+-- evalRandIO $ randomVecR 3 (10,1)
 
 randomVecR :: Random a => Int -> (a, a) -> Rnd (Vector a)
-randomVecR = undefined
+randomVecR n rng = V.fromList <$> replicateM n (getRandomR rng)
 
 -- Exercise 5 -----------------------------------------
 

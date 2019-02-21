@@ -7,7 +7,7 @@ import Control.Monad.Random hiding (mapM, liftM)
 
 import qualified Data.Vector as V
 
-import HW07 (liftM, swapV, mapM, getElts, randomElt)
+import HW07 (liftM, swapV, mapM, getElts, randomElt, randomVec, randomVecR)
 import Testing
 import Data.List
 
@@ -92,12 +92,46 @@ ex3Tests = [ Test "test randomElt" testRandomElt
            ]
 
 
+-- Exercise 4 -----------------------------------------
+-- To get deterministic test result:
+-- evalRnd' (randomVec 3)
+-- evalRnd' (randomVecR 1 (1,9))
+-- evalRnd' (randomVecR 7 (100,999))
+-- evalRnd' (randomVecR 7 ('a','z'))
+-- evalRnd' (randomVecR 40 ('A','F'))
+
+testRandomVec :: (Int, [Integer]) -> Bool
+testRandomVec (n, res) = evalRnd' (randomVec n) == V.fromList res
+
+testRandomVecR :: (Random a, Eq a) => (Int, (a, a), [a]) -> Bool
+testRandomVecR (n, hilo, res) = evalRnd' (randomVecR n hilo) == V.fromList res
+
+ex4Tests :: [Test]
+ex4Tests = [ Test "test randomVec" testRandomVec
+             [(0, [])
+             , (1, [9106162675347844341])
+             , (3, [9106162675347844341,-5782012937088350469,3531325756418318423])
+             ]
+           , Test "test randomVecR Int" testRandomVecR
+             ([(0, (0,0)    , [])
+             , (1, (1,9)    , [3])
+             , (7, (100,999), [183,393,763,238,200,587,781])
+             ] :: [(Int, (Integer, Integer), [Integer])])
+           , Test "test randomVecR String" testRandomVecR
+             [ (0 , (' ',' '), "")
+             , (7 , ('a','z'), "nlrkwld")
+             , (40, ('A','F'), "FFDAEBDBBAFEAECBCDDAEAAFEFCDFEFCFCEECEFB")
+             ]
+           ]
+
+
 -- All Tests -------------------------------------------
 
 allTests :: [Test]
 allTests = concat [ ex1Tests
                   , ex2Tests
                   , ex3Tests
+                  , ex4Tests
                   ]
 
 main :: IO ()
