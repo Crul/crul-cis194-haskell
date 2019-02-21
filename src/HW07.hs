@@ -177,10 +177,10 @@ select idx vec | idx >= len = return Nothing
 -- Exercise 10 ----------------------------------------
 
 allCards :: Deck
-allCards = undefined
+allCards = [ Card lb st | lb <- labels, st <- suits ]
 
 newDeck :: Rnd Deck
-newDeck =  undefined
+newDeck = shuffle allCards
 
 -- Exercise 11 ----------------------------------------
 

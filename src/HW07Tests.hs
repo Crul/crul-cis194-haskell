@@ -4,10 +4,12 @@ module HW07Tests where
 
 import Prelude hiding (mapM)
 import Control.Monad.Random hiding (mapM, liftM)
+import Data.Vector (Vector, (!))
 
 import qualified Data.Vector as V
 
-import HW07 (liftM, swapV, mapM, getElts, randomElt, randomVec, randomVecR, shuffle, partitionAt, qsort, qsortR, select)
+import HW07 (liftM, swapV, mapM, getElts, randomElt, randomVec, randomVecR, shuffle, partitionAt, qsort, qsortR, select, allCards, newDeck)
+import Cards
 import Testing
 import Data.List
 
@@ -203,6 +205,38 @@ ex9Tests = [ Test "test select" testSelect
            ]
 
 
+-- Exercise 10 -----------------------------------------
+-- To get deterministic test result:
+-- evalRnd' newDeck
+-- (evalRnd' newDeck) ! 1
+
+sameCard :: Card -> Card -> Bool
+sameCard (Card lb1 st1) (Card lb2 st2) = lb1 == lb2 && st1 == st2
+
+testAllCards :: (Int, Card) -> Bool
+testAllCards (n, c) = sameCard c (allCards ! n)
+
+testNewDeck :: (Int, Card) -> Bool
+testNewDeck (n, c) = sameCard c ((evalRnd' newDeck) ! n)
+
+ex10Tests :: [Test]
+ex10Tests = [ Test "test allCards" testAllCards
+             [ (0, Card Two Spade)
+             , (1, Card Two Heart)
+             , (4, Card Three Spade)
+             , (10, Card Four Club)
+             , (51, Card Ace Diamond)
+             ]
+           , Test "test newDeck" testNewDeck
+             [ (0, Card Queen Diamond)
+             , (1, Card Three Spade)
+             , (4, Card Two Diamond)
+             , (10, Card Ace Diamond)
+             , (51, Card Jack Diamond)
+             ]
+           ]
+
+
 -- All Tests -------------------------------------------
 
 allTests :: [Test]
@@ -215,6 +249,7 @@ allTests = concat [ ex1Tests
                   , ex7Tests
                   , ex8Tests
                   , ex9Tests
+                  , ex10Tests
                   ]
 
 main :: IO ()
