@@ -113,7 +113,10 @@ transposition = Conj fwrdProof backProof
 -- Exercise 4 -----------------------------------------
 
 de_morgan :: Not (p \/ q) <-> (Not p /\ Not q)
-de_morgan = admit
+de_morgan = Conj fwrdProof backProof
+  where
+    fwrdProof not_POrQ              = Conj (\p -> not_POrQ $ Left p) (\p -> not_POrQ $ Right p)
+    backProof (Conj notP notQ) pOrQ = absurd $ notQ $ disjunctive_syllogism pOrQ notP
 
 -- Natural Numbers ------------------------------------
 
