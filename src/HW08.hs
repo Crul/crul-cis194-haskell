@@ -83,7 +83,8 @@ disjunctive_syllogism (Left p)  not_p = absurd $ not_p p
 -- Exercise 2 -----------------------------------------
 
 composition :: (p -> q) \/ (p -> r) -> p -> q \/ r
-composition = admit
+composition (Left pq)  p = Left $ pq p
+composition (Right pr) p = Right $ pr p
 
 -- Exercise 3 -----------------------------------------
 
