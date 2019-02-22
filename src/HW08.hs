@@ -89,7 +89,26 @@ composition (Right pr) p = Right $ pr p
 -- Exercise 3 -----------------------------------------
 
 transposition :: (p -> q) <-> (Not q -> Not p)
-transposition = admit
+transposition = Conj fwrdProof backProof
+  where
+    fwrdProof pq     = modus_tollens pq
+    backProof npnq p = q
+      where q = case excluded_middle
+                  of Left  q -> q
+                     Right nq -> absurd (npnq nq p)
+
+{-- 1st attempt
+transposition = Conj fwrdProof backProof
+  where
+    fwrdProof pq     = modus_tollens pq
+    backProof npnq p = q
+      where
+        nn = (\x -> (\nx -> nx x))
+        nnq = modus_tollens npnq (nn p)
+        q   = case excluded_middle of
+          Left  q'  -> q'
+          Right nq -> absurd (nnq nq)
+--}
 
 -- Exercise 4 -----------------------------------------
 
