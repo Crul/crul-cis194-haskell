@@ -194,7 +194,8 @@ add_zero (Succ n) = case n_plus_0 n of Refl -> Refl
 -- Exercise 6 -----------------------------------------
 
 n_lt_sn :: Forall n -> n < S n
-n_lt_sn = admit
+n_lt_sn Zero     = LT_Base
+n_lt_sn (Succ n) = LT_Rec $ n_lt_sn n
 
 -- Exercise 7 -----------------------------------------
 
